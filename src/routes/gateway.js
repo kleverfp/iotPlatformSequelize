@@ -6,6 +6,7 @@ const Gateway = require('../models/Gateway');
 const auth = require('../middleware/auth');
 
 
+
 router.get('/:gatewayId',async(req,res)=>{
     try {
         const gateway = await Gateway.findOne( {
@@ -54,25 +55,23 @@ router.post('/new',auth,[
 
         const gatewayFields ={};
 
-        gatewayFields.user = req.user.id;
+        gatewayFields.user_id = req.user.id;
         gatewayFields.name = name;
         gatewayFields.gatewayid = gatewayId;
         gatewayFields.gps ={};
-        if(lon)gatewayFields.gps.lon = lon;
-        if(lat)gatewayFields.gps.lat =lat;
-        gatewayFields.location={};
-        if(country)gatewayFields.location.country =country;
-        if(province)gatewayFields.location.province =province;
-        if(city)gatewayFields.location.city =city;
-        if(neighborhood)gatewayFields.location.neighborhood =neighborhood;
-        if(street)gatewayFields.location.street = street;
-        if(zipCode)gatewayFields.location.zipcode = zipCode;
+        if(lon)gatewayFields.lon = lon;
+        if(lat)gatewayFields.lat =lat;
+        if(country)gatewayFields.country =country;
+        if(province)gatewayFields.province =province;
+        if(city)gatewayFields.city =city;
+        if(neighborhood)gatewayFields.neighborhood =neighborhood;
+        if(street)gatewayFields.street = street;
+        if(zipCode)gatewayFields.zipcode = zipCode;
 
         gateway = new Gateway(gatewayFields);
 
         await gateway.save();
-
-        res.json(gateway);
+        res.json({msg:'gateway created'});
 
     }catch(err){
         console.error(err.message);
