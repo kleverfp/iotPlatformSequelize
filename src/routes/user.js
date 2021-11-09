@@ -27,12 +27,15 @@ router.post('/new',[
         if(user)
             return res.status(500).json({msg:'email already exists'});
 
-       
-       
+        user = new User({
+            name:name.toString(),
+            email:email.toString(),
+            password:password.toString()
+        });
         const salt = await bcrypt.genSalt(10);
-        const cryptPassword = await bcrypt.hash(password,salt);
-     
-        user = await User.create({name:name,email:email,password:cryptPassword});
+        user.password = (await bcrypt.hash(password,salt)).toString();
+    
+        await user.save();
 
         const payload={
             user:{
