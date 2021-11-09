@@ -1,0 +1,11 @@
+module.exports={
+    dialect:'mysql',
+    host:'localhost',
+    username:'ferreira',
+    password:'Kfp_2008',
+    database:'iotplatformdb',
+    define:{
+        timestamps:true,
+        underscored:true
+    }
+}
