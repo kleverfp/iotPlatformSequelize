@@ -15,17 +15,17 @@ router.post('/new',[
 
     const errors =  validationResult(req);
     if(!errors.isEmpty())
-        return res.status(400).json({msg:errors.array()});
+        return res.status(400).json({errors:errors.array()});
 
     const {name,email,password} = req.body;
-
+    
     try {
     
         let user = await User.findOne({where:{email}});
         
     
         if(user)
-            return res.status(500).json({msg:'email already exists'});
+            return res.status(400).json({errors:[{msg:'email already exists'}]});
 
         user = new User({
             name:name.toString(),
@@ -53,7 +53,7 @@ router.post('/new',[
         
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({msg:'server error'});
+        res.status(500).json({errors:[{msg:'server error'}]});
         
     }
 
