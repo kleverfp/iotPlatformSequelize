@@ -1,6 +1,10 @@
 import React,{Fragment,useState} from 'react';
-import {Link} from 'react-router-dom';
-const Login = () => {
+import {Link,Navigate} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { login } from '../../actions/auth';
+import PropTypes from 'prop-types';
+
+const Login = ({login,isAuthenticated}) => {
 
     const [FormData,setFormData] = useState({
     
@@ -20,13 +24,14 @@ const Login = () => {
 
     const submitHandler= async (e)=>{
         e.preventDefault();
-        if(FormData.password !== FormData.password2)
-            //setAlert("Passwords do not match",'danger',10000);
-            console.log("error")
-        else{
-            const {name,email,password} = FormData;
-           //register({name,email,password});
-        }
+        const {email,password} = FormData;
+        login({email,password});
+    }
+
+    if(isAuthenticated){
+        return(
+            <Navigate to='/dashboard'/>
+        )
     }
     return (
        <Fragment>
@@ -56,4 +61,12 @@ const Login = () => {
     )
 }
 
-export default Login
+Login.propTypes ={
+    login:PropTypes.func.isRequired,
+    isAuthenticated:PropTypes.bool,
+};
+const mapStateToProps = state=>({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps,{login})(Login)

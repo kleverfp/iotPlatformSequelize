@@ -36,7 +36,7 @@ router.post('/new',auth,[
     const {name,gatewayId,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body;
  
     try{
-        console.log(req.user.id);
+       
         let gateway = await Gateway.findAll({where:{user_id:req.user.id}});
         
         const msgError =[];

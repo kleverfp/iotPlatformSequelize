@@ -31,6 +31,7 @@
     "moment": "^2.29.1",
     "mysql2": "^2.3.3-rc.0",
     "nodemon": "^2.0.14",
+    "react-router-dom": "^6.0.2",
     "sequelize": "^6.9.0",
     "sequelize-cli": "^6.3.0"
   }
