@@ -39,7 +39,7 @@ const Register = ({setAlert,register}) => {
         }
     }
     return (
-       <Fragment>
+        <section className="container">
            <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={submitHandler}>
@@ -76,7 +76,7 @@ const Register = ({setAlert,register}) => {
             <p className="my-1">
             Already have an account? <Link to="/login">Sign In</Link>
             </p>
-       </Fragment>
+       </section>
     )
 }
 Register.propTypes= {
