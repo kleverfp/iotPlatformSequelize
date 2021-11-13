@@ -7,3 +7,7 @@ export const LOGIN_FAIL='LOGIN_FAIL';
 export const USER_LOADED='USER_LOADED';
 export const AUTH_ERROR='AUTH_ERROR';
 export const LOGOUT='LOGOUT';
+export const GET_SENSOR='GET_SENSOR';
+export const SENSOR_ERROR='SENSOR_ERROR';
+export const GET_GATEWAY='GET_GATEWAY';
+export const GATEWAY_ERROR='GATEWAY_ERROR';

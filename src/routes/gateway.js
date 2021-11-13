@@ -7,23 +7,41 @@ const auth = require('../middleware/auth');
 
 
 
-router.get('/:gatewayId',async(req,res)=>{
+router.get('/:gatewayId',auth,async(req,res)=>{
     try {
         const gateway = await Gateway.findOne( {
             where:{ gatewayId:req.params.gatewayId},
             attributes:['name','gatewayId','lon','lat','country','province','city','street','neighborhood','zipCode']});
 
         if(!gateway)
-            return res.status(400).json({msg:'gateway not found'});
+            return res.status(400).json({erros:[{msg:'gateway not found'}]});
         
         return res.json(gateway);
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({msg:'server error'});
+        res.status(500).json({errors:[{msg:'server error'}]});
     }
 });
 
+router.get('/user/all',auth, async(req,res)=>{
+
+    try {
+        
+        const gateways =  await Gateway.findAll({
+            where:{user_id:req.user.id},
+            attributes: {exclude: ['id']}
+        });
+        
+        res.json(gateways);
+        
+
+    } catch (err) {
+        console.errors(err.message);
+        res.status(500).json({errors:[{msg:'server error'}]});
+    }
+
+});
 router.post('/new',auth,[
     body('name','gateway name is required').trim().not().isEmpty(),
     body('gatewayId','gatewayId is required').trim().not().isEmpty()
