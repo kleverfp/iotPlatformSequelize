@@ -20,7 +20,6 @@ const CreateGateway = ({gateway:{gateway},createGateway}) => {
     }
     const submitHandler = async(e)=> {
         e.preventDefault();
-        console.log(FormData);
         createGateway(FormData,navigate,false);
     }
     return (

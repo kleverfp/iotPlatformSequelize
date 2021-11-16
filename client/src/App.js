@@ -14,7 +14,8 @@ import store from './store';
 import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import CreateGateway from './components/gateway-forms/CreateGateway';
-
+import CreateSensor from './components/sensor-forms/CreateSensor';
+import Sensor from './components/dashboard/Sensor';
 
 
 const  App =()=> {
@@ -34,8 +35,10 @@ const  App =()=> {
             <Route path="/" element={<Landing/>} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
-            <Route path="dashboard" element={<PrivateRoute component={Dashboard} />}/>
-            <Route path="create-gateway" element={<PrivateRoute component={CreateGateway} />}/>
+            <PrivateRoute component={Dashboard} path="/dashboard" exact/>
+            <PrivateRoute component={Sensor} path="/sensor" exact/>
+            <PrivateRoute component={CreateGateway} path="/create-gateway" exact/>
+            <PrivateRoute component={CreateSensor} path="/create-sensor" exact/>
           </Routes>
         </Router>
       </Provider>

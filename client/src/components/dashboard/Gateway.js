@@ -1,17 +1,20 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {Link,Route } from 'react-router-dom';
+import Sensor from './Sensor';
 
 
 
 const Gateway = ({gateway}) => {
 
+    
     const gateways =gateway.map(gtw =>(
         <tr key={gtw.gatewayid}>
             <td>{gtw.gatewayid}</td>
             <td className="hide-sm">{gtw.name}</td>
             <td>
-                <button  className="btn btn-success">Sensors</button>
+               <Link to={{pathname:'/sensor' ,state:{test:true}}} className="btn btn-success">Sensors</Link>
             </td>
             <td>
                 <button  className="btn btn-danger">Delete</button>
@@ -30,6 +33,7 @@ const Gateway = ({gateway}) => {
                 </thead>
                 <tbody>{gateways}</tbody>
             </table>
+            <Link to='/create-gateway' className="btn btn-primary my-1">Create gateway</Link>
         </Fragment>
     )
 }
@@ -39,4 +43,6 @@ Gateway.propTypes = {
 
 }
 
-export default Gateway
+
+
+export default  Gateway

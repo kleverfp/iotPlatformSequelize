@@ -29,7 +29,7 @@ export const getGateways = ()=> async dispatch =>{
 
 export const createGateway = (formData,navigate,edit=false)=> async dispatch =>{
     try {
-        console.log("formData");
+        
         const res = await axios.post('api/gateway/new',formData);
         
         dispatch({

@@ -1,13 +1,15 @@
-import React, { Fragment } from 'react'
-import PropTypes from 'prop-types'
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const CreateSensor = props => {
+const CreateSensor = ({gateway}) => {
+
+   
     return (
-        <Fragment>
-            <h1 class="large text-primary">Create Your Profile</h1>
+        <section className="container">
+            <h1 class="large text-primary">Add Your Sensor</h1>
             <p class="lead">
-                <i class="fas fa-user"></i> Let's get some information to make your
-                profile stand out</p>
+                <i class="fas fa-user"></i> Let's get some information about your sensor</p>
             <small>* = required field</small>
             <form class="form">
                 <div class="form-group">
@@ -33,12 +35,12 @@ const CreateSensor = props => {
                 <input type="submit" class="btn btn-primary my-1" />
                 <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
               </form>
-        </Fragment>
+        </section>
         
     )
 }
 CreateSensor.propTypes = {
-
+    gateway:PropTypes.object.isRequired,
 }
 
-export default CreateSensor;
+export default  CreateSensor;

@@ -30,7 +30,7 @@ const Login = ({login,isAuthenticated}) => {
 
     if(isAuthenticated){
         return(
-            <Navigate to='/dashboard'/>
+            <Navigate path='/dashboard'/>
         )
     }
     return (
