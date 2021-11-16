@@ -1,4 +1,4 @@
-import { GATEWAY_ERROR, GET_GATEWAY } from "../actions/types";
+import { CLEAR_GATEWAY, GATEWAY_ERROR, GET_GATEWAY } from "../actions/types";
 
 
 const initialState ={
@@ -25,6 +25,14 @@ export default function (state= initialState, action){
                 error:payload,
                 loading:false
             };
+        case CLEAR_GATEWAY:
+            return{
+                ...state,
+                gateway:null,
+                gateways:[],
+                loading:false
+
+            }
         default:
             return state;
     }

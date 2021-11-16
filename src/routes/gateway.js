@@ -32,6 +32,9 @@ router.get('/user/all',auth, async(req,res)=>{
             where:{user_id:req.user.id},
             attributes: {exclude: ['id']}
         });
+
+       /* if(gateways)
+            return res.status(400).json({errors:[{msg:'no gateway found'}]});*/
         
         res.json(gateways);
         
@@ -44,14 +47,15 @@ router.get('/user/all',auth, async(req,res)=>{
 });
 router.post('/new',auth,[
     body('name','gateway name is required').trim().not().isEmpty(),
-    body('gatewayId','gatewayId is required').trim().not().isEmpty()
+    body('gatewayid','gatewayid is required').trim().not().isEmpty()
 
 ],async (req,res)=>{
+    console.log(req.body);
     const errors =validationResult(req);
     if(!errors.isEmpty())
         return res.status(400).json({msg:errors.array()});
 
-    const {name,gatewayId,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body;
+    const {name,gatewayid,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body;
  
     try{
        
@@ -63,19 +67,21 @@ router.post('/new',auth,[
         if(gatewayName >= 0)
             msgError.push({error:'name already existis'});
         
-        const gatewayExistId = gateway.map((gtway)=>gtway.gatewayId).indexOf(gatewayId);
+        const gatewayExistId = gateway.map((gtway)=>gtway.gatewayid).indexOf(gatewayid);
 
         if(gatewayExistId  >= 0)
             msgError.push({error:'gatewayId already existis'});
 
+        console.log(msgError);
+
         if(msgError.length > 0)
-            return res.status(400).json({msg:msgError});
+            return res.status(400).json({errors:[{msg:msgError}]});
 
         const gatewayFields ={};
 
         gatewayFields.user_id = req.user.id;
         gatewayFields.name = name;
-        gatewayFields.gatewayid = gatewayId;
+        gatewayFields.gatewayid = gatewayid;
         gatewayFields.gps ={};
         if(lon)gatewayFields.lon = lon;
         if(lat)gatewayFields.lat =lat;

@@ -27,6 +27,7 @@ router.post('/new',[
         if(user)
             return res.status(400).json({errors:[{msg:'email already exists'}]});
 
+            console.log(user);
         user = new User({
             name:name.toString(),
             email:email.toString(),

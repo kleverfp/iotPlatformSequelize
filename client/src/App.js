@@ -13,6 +13,7 @@ import {Provider} from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
+import CreateGateway from './components/gateway-forms/CreateGateway';
 
 
 
@@ -34,6 +35,7 @@ const  App =()=> {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="dashboard" element={<PrivateRoute component={Dashboard} />}/>
+            <Route path="create-gateway" element={<PrivateRoute component={CreateGateway} />}/>
           </Routes>
         </Router>
       </Provider>

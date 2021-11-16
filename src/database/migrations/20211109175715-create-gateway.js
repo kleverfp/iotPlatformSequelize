@@ -22,39 +22,39 @@ module.exports = {
      },
      gatewayid:{
        type:Sequelize.STRING,
-       allowNull:false
+       
      },
      lat:{
        type:Sequelize.STRING,
-       allowNull:false
+      
      },
      lon:{
       type:Sequelize.STRING,
-      allowNull:false
+      
     },
     country:{
       type:Sequelize.STRING,
-      allowNull:false
+      
     },
     province:{
       type:Sequelize.STRING,
-      allowNull:false
+      
     },
     city:{
       type:Sequelize.STRING,
-      allowNull:false
+     
     },
     neighborhood:{
       type:Sequelize.STRING,
-      allowNull:false
+      
     },
     street:{
       type:Sequelize.STRING,
-      allowNull:false
+      
     },
     zipcode:{
       type:Sequelize.STRING,
-      allowNull:false
+     
     },
     
      created_at:{
