@@ -6,15 +6,14 @@ import {
     SENSOR_ERROR
 } from './types'
 
-export const getSensors = (gateway)=> async dispatch =>{
-    console.log(gateway);
-   /* try {
-        const res = await axios.get(`api/sensor/gateway/${gateway}`);
+export const getSensors = (gatewayid)=> async dispatch =>{
+
+    try {
+        const res = await axios.get(`/api/sensor/gateway/${gatewayid}`);
        console.log(res.data);
         dispatch({
             type:GET_SENSOR,
             payload:res.data
-            
         });
 
 
@@ -23,6 +22,6 @@ export const getSensors = (gateway)=> async dispatch =>{
             type:SENSOR_ERROR,
             payload:{msg:err.response.statusText,status:err.response.status}
         })
-    }*/
+    }
 }
 

@@ -83,9 +83,12 @@ router.get('/:sensorId',auth,async(req,res)=>{
 
 router.get('/gateway/:gatewayId',async (req,res)=>{
     try {
+        console.log("get by id");
         const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}});
-        if(!gateway)
-            return res.status(400).json({msg:'gateway not found'});
+        if(!gateway){
+            console.log("not found");
+            return res.status(400).json({errors:[{msg:'gateway not found'}]});
+        }
 
         const sensor = await Sensor.findAll({ 
             where:{gateway_id:gateway.id},

@@ -9,8 +9,6 @@ import {
 export const getGateways = ()=> async dispatch =>{
     try {
         const res = await axios.get('api/gateway/user/all');
-        
-
 
         dispatch({
             type:GET_GATEWAY,

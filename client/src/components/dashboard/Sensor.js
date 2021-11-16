@@ -1,47 +1,53 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {Link,Navigate } from 'react-router-dom';
+import {Link,useParams } from 'react-router-dom';
 import { getSensors } from '../../actions/sensor';
 import Spinner from '../layout/Spinner';
-import { useLocation } from 'react-router-dom';
 
-const Sensor = ({sensor:{sensor}}) => {
-    let location = useLocation();
 
+const Sensor = ({getSensors,sensor:{sensor}}) => {
+    
+    const {gatewayid} = useParams();
     useEffect(()=>{
-       
-        console.log(location);
-        //getSensors(gatewayid);
+        getSensors(gatewayid);
     },[]);
    
        
        
     return (
         <section className="container">{
-            (sensor ===null || sensor.length ==0)  ? (<Spinner/>):(
+            (sensor ===null)  ? (<Spinner/>):(
             <Fragment>
-               
                 <h2 className="my-2">Sensors</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th className='hide-sm'>name</th>
-                        </tr>
-                    </thead>
-                    <tbody>{sensor.map(snr =>(
-                        <tr key={snr.sensorid}>
-                            <td>{snr.sensorid}</td>
-                            <td className="hide-sm">{snr.name}</td>
-                
-                            <td>
-                            <button  className="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>))}
-                    </tbody>
-                </table>
-                <Link to='/create-sensor' className="btn btn-primary my-1">Create sensor</Link>
+               {
+                   sensor !== null && sensor.length > 0 ?(
+                    <Fragment>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th className='hide-sm'>name</th>
+                                </tr>
+                            </thead>
+                            <tbody>{sensor.map(snr =>(
+                                <tr key={snr.sensorid}>
+                                    <td>{snr.sensorid}</td>
+                                    <td className="hide-sm">{snr.name}</td>
+                        
+                                    <td>
+                                    <button  className="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>))}
+                            </tbody>
+                        </table>
+                        <Link to='/create-sensor' className="btn btn-primary my-1">Create sensor</Link>
+                   </Fragment>):(<Fragment>
+                    <p>No sensor registered.</p>
+                    <Link to='/create-sensor' className="btn btn-primary my-1">Create sensor</Link>
+                   </Fragment>)
+               }
+               
             </Fragment>)}
         </section>
     )

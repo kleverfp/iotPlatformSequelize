@@ -1,20 +1,24 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {Link,Route } from 'react-router-dom';
-import Sensor from './Sensor';
+import {Link,useNavigate } from 'react-router-dom';
+
 
 
 
 const Gateway = ({gateway}) => {
-
-    
+    const navigate = useNavigate();
+    const sensorHandler = (gtw)=>{
+        console.log(gtw);
+        navigate(`/sensor/${gtw.gatewayid}`);
+       
+    }
     const gateways =gateway.map(gtw =>(
         <tr key={gtw.gatewayid}>
             <td>{gtw.gatewayid}</td>
             <td className="hide-sm">{gtw.name}</td>
             <td>
-               <Link to='/sensor' className="btn btn-success">Sensors</Link>
+               <button onClick={()=>sensorHandler(gtw)} className="btn btn-success">Sensors</button>
             </td>
             <td>
                 <button  className="btn btn-danger">Delete</button>

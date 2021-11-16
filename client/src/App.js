@@ -36,7 +36,7 @@ const  App =()=> {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="dashboard" element={<PrivateRoute component={Dashboard} />}/>
-            <Route path="sensor" element={<PrivateRoute component={Sensor} />}/>
+            <Route path="sensor/:gatewayid" element={<PrivateRoute component={Sensor} />}/>
             <Route path="create-gateway" element={<PrivateRoute component={CreateGateway} />}/>
             <Route path="create-sensor" element={<PrivateRoute component={CreateSensor} />}/>
           </Routes>
