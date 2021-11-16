@@ -35,10 +35,10 @@ const  App =()=> {
             <Route path="/" element={<Landing/>} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
-            <PrivateRoute component={Dashboard} path="/dashboard" exact/>
-            <PrivateRoute component={Sensor} path="/sensor" exact/>
-            <PrivateRoute component={CreateGateway} path="/create-gateway" exact/>
-            <PrivateRoute component={CreateSensor} path="/create-sensor" exact/>
+            <Route path="dashboard" element={<PrivateRoute component={Dashboard} />}/>
+            <Route path="sensor" element={<PrivateRoute component={Sensor} />}/>
+            <Route path="create-gateway" element={<PrivateRoute component={CreateGateway} />}/>
+            <Route path="create-sensor" element={<PrivateRoute component={CreateSensor} />}/>
           </Routes>
         </Router>
       </Provider>

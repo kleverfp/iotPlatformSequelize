@@ -14,7 +14,7 @@ const Gateway = ({gateway}) => {
             <td>{gtw.gatewayid}</td>
             <td className="hide-sm">{gtw.name}</td>
             <td>
-               <Link to={{pathname:'/sensor' ,state:{test:true}}} className="btn btn-success">Sensors</Link>
+               <Link to='/sensor' className="btn btn-success">Sensors</Link>
             </td>
             <td>
                 <button  className="btn btn-danger">Delete</button>
