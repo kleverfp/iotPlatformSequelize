@@ -3,7 +3,8 @@ import { setAlert } from "./alert";
 
 import {
     GET_SENSOR,
-    SENSOR_ERROR
+    SENSOR_ERROR,
+    UPDATE_SENSOR
 } from './types'
 
 export const getSensors = (gatewayid)=> async dispatch =>{
@@ -43,11 +44,41 @@ export const createSensor = (gatewayid,formData,navigate) => async dispatch =>{
         navigate(`/sensor/${gatewayid}`);
         
     } catch (error) {
-        console.log(error);
+       
         dispatch({
             type:SENSOR_ERROR,
             payload:{msg:error.response.statusText,status:error.response.status}
         });
     }
+}
+
+
+export const deleteSensor = (sensorid,gatewayid) => async(dispatch) =>{
+
+    try {
+        const res = await axios.delete(`/api/sensor/${gatewayid}/${sensorid}`);
+
+        dispatch(setAlert('sensor removed','success'));
+
+        dispatch({
+            type:UPDATE_SENSOR,
+            payload:res.data
+        })
+        
+    } catch (error) {
+        dispatch({
+            type:SENSOR_ERROR,
+            payload:{msg:error.response.statusText,status:error.response.status}
+        });
+
+        const errors = error.response.data.errors;
+       
+        if(errors){
+            errors.forEach(error=>{
+                dispatch(setAlert(error.msg,'danger'))
+            });
+        }   
+    }
+
 }
 

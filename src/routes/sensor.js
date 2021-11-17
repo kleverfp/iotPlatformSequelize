@@ -64,7 +64,7 @@ router.post('/new/:gatewayId',auth,[
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({msg:'server error'});        
+        res.status(500).json({errors:[{msg:'server error'}]});        
     }
 
 });
@@ -83,10 +83,10 @@ router.get('/:sensorId',auth,async(req,res)=>{
     }
 });
 
-router.get('/gateway/:gatewayId',async (req,res)=>{
+router.get('/gateway/:gatewayid',async (req,res)=>{
     try {
         
-        const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}});
+        const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayid}});
         if(!gateway){
             return res.status(400).json({errors:[{msg:'gateway not found'}]});
         }
@@ -107,14 +107,31 @@ router.get('/gateway/:gatewayId',async (req,res)=>{
     }
 });
 
-router.delete('/:sensorId',auth,async (req,res)=>{
+router.delete('/:gatewayid/:sensorId',auth,async (req,res)=>{
     try {
-        const sensor = await Sensor.destroy({where:{sensorid:req.params.sensorId}});
+       
+
+        const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayid}});
+        if(!gateway){
+                return res.status(400).json({errors:[{msg:'gateway not found'}]});
+        }
+
+        const sensorRemoved = await Sensor.destroy({where:{sensorid:req.params.sensorId}});
+        if(!sensorRemoved)
+            return res.status(400).json({errors:[{msg:'sensor not found'}]});
+    
+        const sensor = await Sensor.findAll({ 
+            where:{gateway_id:gateway.id},
+            attributes:['sensorid','name','sensorId','type','communication','lon','lat','country','province','city','neighborhood','street','zipCode']});
+            
         if(!sensor)
-            return res.status(400).json({msg:'sensor not found'});
-        
-        
+            return res.status(400).json({msg:'no sensors'});
+    
+           
+            
         res.json(sensor);
+        
+        
         
     } catch (err) {
         console.log(err.message);

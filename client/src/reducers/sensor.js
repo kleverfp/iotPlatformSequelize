@@ -1,4 +1,4 @@
-import { CLEAR_SENSOR, SENSOR_ERROR, GET_SENSOR } from "../actions/types";
+import { CLEAR_SENSOR, SENSOR_ERROR, GET_SENSOR, UPDATE_SENSOR } from "../actions/types";
 
 
 const initialState ={
@@ -14,6 +14,7 @@ export default function (state= initialState, action){
 
     switch(type){
         case GET_SENSOR:
+        case UPDATE_SENSOR:
             return{
                 ...state,
                 sensor:payload,
@@ -25,6 +26,11 @@ export default function (state= initialState, action){
                 error:payload,
                 loading:false
             };
+        case UPDATE_SENSOR:
+            return{
+                ...state,
+                loading:false
+            }
         case CLEAR_SENSOR:
             return{
                 ...state,

@@ -29,7 +29,7 @@ export const loadUser = () => async dispatch => {
     }
   };
 
-export const register=({name,email,password})=> async dispatch =>{
+export const register=({name,email,password,navigate})=> async dispatch =>{
     const config={
         headers:{
             'Content-Type':'application/json'
@@ -44,7 +44,11 @@ export const register=({name,email,password})=> async dispatch =>{
             type:REGISTER_SUCCESS,
             payload:res.data
         });
+        dispatch(setAlert('user created','success'));
         dispatch(loadUser());
+
+
+        navigate('/dashboard');
     } catch (err) {
         const errors = err.response.data.errors;
        
@@ -79,18 +83,17 @@ export const login=({email,password})=> async dispatch =>{
 
         dispatch(loadUser());
     } catch (err) {
-       /* const errors = err.response.data.errors;
+      const errors = err.response.data.errors;
        
         if(errors){
             errors.forEach(error=>{
                 dispatch(setAlert(error.msg,'danger'))
-            })*/
+            });
 
             dispatch({
                 type:LOGIN_FAIL
-            })
-       // }   
-        console.log(err.response);
+            });
+        }   
     }
 }
 

@@ -1,12 +1,13 @@
 import React,{Fragment,useState} from 'react';
 import {connect}  from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link,useNavigate} from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 
 import PropTypes from 'prop-types';
 
 const Register = ({setAlert,register}) => {
+    const navigate = useNavigate();
 
     const [FormData,setFormData] = useState({
         name:'',
@@ -35,7 +36,7 @@ const Register = ({setAlert,register}) => {
             setAlert("Passwords do not match",'danger',2000);
         else{
             const {name,email,password} = FormData;
-           register({name,email,password});
+           register({name,email,password,navigate});
         }
     }
     return (

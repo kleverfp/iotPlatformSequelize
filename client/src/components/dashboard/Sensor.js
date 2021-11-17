@@ -2,11 +2,11 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useParams,useNavigate } from 'react-router-dom';
-import { getSensors } from '../../actions/sensor';
+import { getSensors,deleteSensor } from '../../actions/sensor';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,sensor:{sensor}}) => {
+const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
 
     const {gatewayid} = useParams();
@@ -15,9 +15,17 @@ const Sensor = ({getSensors,sensor:{sensor}}) => {
     },[]);
    
     const createSensorHandler = (e)=>{
-        navigate(`/create-sensor/${gatewayid}`)
+        navigate(`/create-sensor/${gatewayid}`);
     }    
-       
+    const dashboardHandler = (e)=>{
+        navigate('/dashboard');
+        
+    } 
+      
+    const deleteHandler= async (sensorid) =>{
+            deleteSensor(sensorid,gatewayid);
+    }
+
     return (
         <section className="container">{
             (sensor ===null)  ? (<Spinner/>):(
@@ -39,15 +47,17 @@ const Sensor = ({getSensors,sensor:{sensor}}) => {
                                     <td className="hide-sm">{snr.name}</td>
                         
                                     <td>
-                                    <button  className="btn btn-danger">Delete</button>
+                                    <button onClick={ () =>deleteHandler(snr.sensorid)} className="btn btn-danger">Delete</button>
                                     </td>
                                 </tr>))}
                             </tbody>
                         </table>
                         <button onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
+                        <button className="btn btn-light my-1" onClick={dashboardHandler}>Go Back</button>
                    </Fragment>):(<Fragment>
                     <p>No sensor registered.</p>
                     <button   onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
+                    <button className="btn btn-light my-1" onClick={dashboardHandler}>Go Back</button>
                    </Fragment>)
                }
                
@@ -58,7 +68,8 @@ const Sensor = ({getSensors,sensor:{sensor}}) => {
 
 Sensor.propTypes = {
     sensor:PropTypes.object.isRequired,
-    getSensors:PropTypes.func.isRequired
+    getSensors:PropTypes.func.isRequired,
+    deleteSensor:PropTypes.func.isRequired
 
 }
 
@@ -67,4 +78,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{getSensors}) (Sensor)
+export default connect(mapStateToProps,{getSensors,deleteSensor}) (Sensor)
