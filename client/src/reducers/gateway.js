@@ -1,4 +1,4 @@
-import { CLEAR_GATEWAY, GATEWAY_ERROR, GET_GATEWAY } from "../actions/types";
+import { CLEAR_GATEWAY, GATEWAY_ERROR, GET_GATEWAY, UPDATE_GATEWAY } from "../actions/types";
 
 
 const initialState ={
@@ -14,6 +14,7 @@ export default function (state= initialState, action){
 
     switch(type){
         case GET_GATEWAY:
+        case UPDATE_GATEWAY:
             return{
                 ...state,
                 gateway:payload,

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {setAlert} from './alert';
 import {
     GET_GATEWAY,
+    UPDATE_GATEWAY,
     GATEWAY_ERROR
 }from './types';
 
@@ -58,4 +59,33 @@ export const createGateway = (formData,navigate,edit=false)=> async dispatch =>{
         
         
     }
+}
+
+export const deleteGateway = (gatewayid)=> async(dispatch) =>{
+
+    try {
+        const res = await axios.delete(`/api/gateway/${gatewayid}`);
+
+        dispatch({
+            type:UPDATE_GATEWAY,
+            payload : res.data
+        });
+
+        dispatch(setAlert('gateway removed','success'))
+
+    } catch (error) {
+        dispatch({
+            type:GATEWAY_ERROR,
+            payload:{msg:error.response.statusText,status:error.response.status}
+        });
+
+        const errors = error.response.data.errors;
+       
+        if(errors){
+            errors.forEach(error=>{
+                dispatch(setAlert(error.msg,'danger'))
+            });
+        }   
+    }
+
 }

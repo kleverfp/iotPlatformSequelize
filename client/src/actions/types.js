@@ -14,5 +14,6 @@ export const CLEAR_SENSOR='CLEAR_SENSOR';
 export const GET_GATEWAY='GET_GATEWAY';
 export const GATEWAY_ERROR='GATEWAY_ERROR';
 export const CLEAR_GATEWAY='CLEAR_GATEWAY';
+export const UPDATE_GATEWAY ='UPDATE_GATEWAY'; 
 
 

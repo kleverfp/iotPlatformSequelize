@@ -2,15 +2,20 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useNavigate } from 'react-router-dom';
+import { deleteGateway } from '../../actions/gateway';
 
 
 
-
-const Gateway = ({gateway}) => {
+const Gateway = ({deleteGateway,gateway:{gateway}}) => {
     const navigate = useNavigate();
     const sensorHandler = (gtw)=>{
         navigate(`/sensor/${gtw.gatewayid}`);
        
+    }
+
+    const deleteGatewayHandler = async(gatewayid)=>{
+        deleteGateway(gatewayid);
+
     }
     const gateways =gateway.map(gtw =>(
         <tr key={gtw.gatewayid}>
@@ -20,7 +25,7 @@ const Gateway = ({gateway}) => {
                <button onClick={()=>sensorHandler(gtw)} className="btn btn-success">Sensors</button>
             </td>
             <td>
-                <button  className="btn btn-danger">Delete</button>
+                <button onClick={()=>deleteGatewayHandler(gtw.gatewayid)} className="btn btn-danger">Delete</button>
             </td>
         </tr>
     ))
@@ -47,5 +52,10 @@ Gateway.propTypes = {
 }
 
 
+const mapStateToProps= state=>({
+    gateway:state.gateway
+})
 
-export default  Gateway
+
+
+export default connect(mapStateToProps,{deleteGateway})(Gateway)

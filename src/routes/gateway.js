@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Gateway = require('../models/Gateway');
 const auth = require('../middleware/auth');
-
+const Sensor = require('../models/Sensor');
 
 
 router.get('/:gatewayId',auth,async(req,res)=>{
@@ -110,14 +110,23 @@ router.delete('/:gatewayId',auth,async(req,res)=>{
         if(!gateway)
             return res.status(400).json({msg:'no gateway find'});
 
+        const sensorRemoved = await Sensor.destroy({where:{gateway_id:gateway.id}});
+        
+
         await Gateway.destroy({where:{id:gateway.id}});
 
-        res.json({gateway})
+        const gateways =  await Gateway.findAll({
+            where:{user_id:req.user.id},
+            attributes: {exclude: ['id']}
+        });
+
+        res.json(gateways);
+
 
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({msg:'server error'});
+        res.status(500).json({errors:[{msg:'server error'}]});
     }
 });
 
