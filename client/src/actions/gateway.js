@@ -13,13 +13,15 @@ export const getGateways = ()=> async dispatch =>{
         dispatch({
             type:GET_GATEWAY,
             payload : res.data
-        })
+        });
+
+        
     } catch (error) {
 
         dispatch({
             type:GATEWAY_ERROR,
             payload:{msg:error.response.statusText,status:error.response.status}
-        })
+        });
         
     }
 }
@@ -27,8 +29,12 @@ export const getGateways = ()=> async dispatch =>{
 
 export const createGateway = (formData,navigate,edit=false)=> async dispatch =>{
     try {
-        
-        const res = await axios.post('api/gateway/new',formData);
+        const config = {
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }
+        const res = await axios.post('api/gateway/new',formData,config);
         
         dispatch({
             type:GET_GATEWAY,
@@ -47,7 +53,9 @@ export const createGateway = (formData,navigate,edit=false)=> async dispatch =>{
         dispatch({
             type:GATEWAY_ERROR,
             payload:{msg:error.response.statusText,status:error.response.status}
-        })
+        });
+
+        
         
     }
 }

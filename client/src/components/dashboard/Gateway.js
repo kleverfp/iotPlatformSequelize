@@ -9,7 +9,6 @@ import {Link,useNavigate } from 'react-router-dom';
 const Gateway = ({gateway}) => {
     const navigate = useNavigate();
     const sensorHandler = (gtw)=>{
-        console.log(gtw);
         navigate(`/sensor/${gtw.gatewayid}`);
        
     }
@@ -26,7 +25,7 @@ const Gateway = ({gateway}) => {
         </tr>
     ))
     return (
-        <Fragment>
+        <section className="container">
             <h2 className="my-2">Gateways</h2>
             <table className="table">
                 <thead>
@@ -38,7 +37,7 @@ const Gateway = ({gateway}) => {
                 <tbody>{gateways}</tbody>
             </table>
             <Link to='/create-gateway' className="btn btn-primary my-1">Create gateway</Link>
-        </Fragment>
+        </section>
     )
 }
 

@@ -7,14 +7,16 @@ const auth = require('../middleware/auth');
 
 router.post('/new/:gatewayId',auth,[
     body('name','Sensor name is required').trim().not().isEmpty(),
-    body('sensorId','sensorId  is required').trim().not().isEmpty(),
+    body('sensorid','sensorid  is required').trim().not().isEmpty(),
     body('type','sensor type is required').trim().not().isEmpty(),
 ],async(req,res)=>{
     const errors = validationResult(req);
+    console.log(req.body);
+
     if(!errors.isEmpty())
-        return res.status(400).json({msg:errors.array()});
+        return res.status(400).json({errors:[{msg:errors.array()}]});
     
-    const {name,sensorId,type,communication,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body; 
+    const {name,sensorid,type,communication,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body; 
     try {
         const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}}) ;
 
@@ -28,7 +30,7 @@ router.post('/new/:gatewayId',auth,[
         if(sensorName >= 0)
             msgError.push({error:'name already existis'});
         
-        const sensorExistId = sensor.map((sensorItem)=>sensorItem.gateway_id).indexOf(sensorId);
+        const sensorExistId = sensor.map((sensorItem)=>sensorItem.gateway_id).indexOf(sensorid);
 
         if(sensorExistId  >= 0)
             msgError.push({error:'sensorId already existis'});
@@ -40,7 +42,7 @@ router.post('/new/:gatewayId',auth,[
             
             sensorFields.gateway_id =gateway.id;
             sensorFields.name = name;
-            sensorFields.sensorid = sensorId;
+            sensorFields.sensorid = sensorid;
             sensorFields.type = type;
             sensorFields.communication = communication;
             sensorFields.gps ={};
@@ -83,10 +85,9 @@ router.get('/:sensorId',auth,async(req,res)=>{
 
 router.get('/gateway/:gatewayId',async (req,res)=>{
     try {
-        console.log("get by id");
+        
         const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}});
         if(!gateway){
-            console.log("not found");
             return res.status(400).json({errors:[{msg:'gateway not found'}]});
         }
 

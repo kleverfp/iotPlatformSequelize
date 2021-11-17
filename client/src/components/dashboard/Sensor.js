@@ -1,19 +1,22 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {Link,useParams } from 'react-router-dom';
+import {Link,useParams,useNavigate } from 'react-router-dom';
 import { getSensors } from '../../actions/sensor';
 import Spinner from '../layout/Spinner';
 
 
 const Sensor = ({getSensors,sensor:{sensor}}) => {
-    
+    const navigate = useNavigate();
+
     const {gatewayid} = useParams();
     useEffect(()=>{
         getSensors(gatewayid);
     },[]);
    
-       
+    const createSensorHandler = (e)=>{
+        navigate(`/create-sensor/${gatewayid}`)
+    }    
        
     return (
         <section className="container">{
@@ -41,10 +44,10 @@ const Sensor = ({getSensors,sensor:{sensor}}) => {
                                 </tr>))}
                             </tbody>
                         </table>
-                        <Link to='/create-sensor' className="btn btn-primary my-1">Create sensor</Link>
+                        <button onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
                    </Fragment>):(<Fragment>
                     <p>No sensor registered.</p>
-                    <Link to='/create-sensor' className="btn btn-primary my-1">Create sensor</Link>
+                    <button   onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
                    </Fragment>)
                }
                
