@@ -4,6 +4,7 @@ const router = express.Router();
 const Sensor = require('../models/Sensor');
 const Gateway = require('../models/Gateway');
 const auth = require('../middleware/auth');
+const connectionDB = require('../database');
 
 router.post('/new/:gatewayId',auth,[
     body('name','Sensor name is required').trim().not().isEmpty(),
@@ -86,20 +87,12 @@ router.get('/:sensorId',auth,async(req,res)=>{
 router.get('/gateway/:gatewayid',async (req,res)=>{
     try {
         
-        const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayid}});
-        if(!gateway){
-            return res.status(400).json({errors:[{msg:'gateway not found'}]});
-        }
-
-        const sensor = await Sensor.findAll({ 
-            where:{gateway_id:gateway.id},
-            attributes:['sensorid','name','sensorId','type','communication','lon','lat','country','province','city','neighborhood','street','zipCode']});
-        if(!sensor)
+        const [results,metadata] = await connectionDB.query(`select sensorid,name,sdmres.status,sdmres.data,sdmres.created_at from sensors left join(select sd.sensor_id,sd.created_at,sd.status,sd.data from sensordata sd inner join (select sensor_id,max(created_at) as MaxDate from sensordata group by sensor_id) sdm on sd.sensor_id = sdm.sensor_id and sd.created_at = sdm.MaxDate)sdmres on sensors.id=sdmres.sensor_id where gateway_id in(select id from gateways where gatewayid="${req.params.gatewayid}");`);
+        if(!results)
             return res.status(400).json({msg:'no sensors'});
 
-       
-        
-        res.json(sensor);
+        console.log(results);
+        res.json(results);
 
     } catch (err) {
         console.log(err.message);

@@ -10,6 +10,7 @@ import {
 export const getSensors = (gatewayid)=> async dispatch =>{
 
     try {
+        
         const res = await axios.get(`/api/sensor/gateway/${gatewayid}`);
        console.log(res.data);
         dispatch({

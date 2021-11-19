@@ -3,7 +3,8 @@ import {setAlert} from './alert';
 import {
     GET_GATEWAY,
     UPDATE_GATEWAY,
-    GATEWAY_ERROR
+    GATEWAY_ERROR,
+    CLEAR_SENSOR
 }from './types';
 
 
@@ -15,6 +16,9 @@ export const getGateways = ()=> async dispatch =>{
             type:GET_GATEWAY,
             payload : res.data
         });
+        dispatch({
+            type:CLEAR_SENSOR
+        })
 
         
     } catch (error) {

@@ -6,12 +6,13 @@ import { getSensors,deleteSensor } from '../../actions/sensor';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
+const Sensor = ({getSensors,getSensorData,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
 
     const {gatewayid} = useParams();
     useEffect(()=>{
         getSensors(gatewayid);
+        
     },[]);
    
     const createSensorHandler = (e)=>{
@@ -39,13 +40,16 @@ const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
                                 <tr>
                                     <th>ID</th>
                                     <th className='hide-sm'>name</th>
+                                    <th className='hide-sm'>status</th>
+                                    <th className='hide-sm'>last update</th>
                                 </tr>
                             </thead>
                             <tbody>{sensor.map(snr =>(
                                 <tr key={snr.sensorid}>
                                     <td>{snr.sensorid}</td>
                                     <td className="hide-sm">{snr.name}</td>
-                        
+                                    <td className="hide-sm">{snr.status}</td>
+                                    <td className="hide-sm">{snr.created_at}</td>
                                     <td>
                                     <button onClick={ () =>deleteHandler(snr.sensorid)} className="btn btn-danger">Delete</button>
                                     </td>
