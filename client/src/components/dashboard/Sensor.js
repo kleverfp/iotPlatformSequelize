@@ -9,8 +9,8 @@ import Spinner from '../layout/Spinner';
 
 const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
-
     const {gatewayid} = useParams();
+    
     useEffect(()=>{
         getSensors(gatewayid);
         socketConnection(gatewayid);

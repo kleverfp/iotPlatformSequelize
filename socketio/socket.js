@@ -10,15 +10,17 @@ const io = require('socket.io')(http,{
   }
 });
 const FindGateway = require('../src/controllers/Gateway');
+const GetSensorData = require('../src/controllers/SensorData');
 const socketGatewayId =[];
 const socketUserId =[];
 
 
 io.use(async(socket, next) => {
   const gatewayid = socket.handshake.auth.gatewayid;
-
+ 
   try {
     if(!gatewayid){
+     
       auth(socket.handshake.auth.token,socket,next);
       if(socket.user){
         const index = socketUserId.findIndex((obj)=>obj.user=socket.user);
@@ -28,21 +30,26 @@ io.use(async(socket, next) => {
         else
           socketUserId.push({"user":socket.user,"socket":socket.id});
 
-          console.log("handshke:",socketUserId);
           next();
         
       }
     }
     
     else{
+      
       const gateway = await FindGateway(gatewayid);
   
 
-      if (!gateway) {
+      if (!gateway) 
         return next(new Error("invalid gatewayid"));
-      }
-  
-      socket.gatewayid = gatewayid;
+      
+      const index = socketGatewayId.findIndex((obj)=>obj.gateway=gateway.id);
+
+      if(index > -1)
+        socketGatewayId[index].socket = socket.id;
+      else
+      socketGatewayId.push({"gateway":gateway.id,"socket":socket.id});
+    
       next();
     }
     
@@ -53,26 +60,21 @@ io.use(async(socket, next) => {
 });
 
 io.on('connect', function(socket){
-    console.log(socket.data);
-    socket.emit("messageClient", "hello world");
+  
+      socket.on("clientMsg", async({ content, to }) => {
+        try {
+          await socketmsg(content);
+          const data =  await GetSensorData(socketGatewayId[0].gateway);
 
-   /* socket.on("clientMsg", data => {
-       socketmsg(data);
-    });*/
+          socket.to(socketUserId[0].socket).emit("client",data);
 
-    socket.on("clientMsg", ({ content, to }) => {
-      console.log("content:",content);
-      //userid =socket.id;
-     socketmsg(content);
+        } catch (error) {
+          console.error(error.message);
+        }
+     
     });
 
- /*   setInterval(()=>{
-      console.log("snd",socket.id);
-      socket.to(userid).emit("private",{
-        content:"ok",
-        from:socket.id
-      })
-  },10000)*/
+
 });
 
 

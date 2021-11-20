@@ -11,7 +11,8 @@ router.get('/gateway/:gatewayid',auth,async(req,res) =>{
         res.json({results});
         
     } catch (error) {
-        
+        console.error(error.message);
+        res.status(500).json({errors:[{msg:"server error"}]});
     }
 });
 
