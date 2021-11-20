@@ -2,6 +2,7 @@ const express = require('express');
 const socketmsg = require('../src/routes/socket');
 const app = express();
 const http = require('http').Server(app);
+const auth = require('../src/middleware/socketAuth');
 const io = require('socket.io')(http,{
   cors: {
     origin: "http://localhost:3000",
@@ -9,23 +10,41 @@ const io = require('socket.io')(http,{
   }
 });
 const FindGateway = require('../src/controllers/Gateway');
-let gatewayid ="";
-let userid ="";
+const socketGatewayId =[];
+const socketUserId =[];
 
 
 io.use(async(socket, next) => {
-  gatewayid = socket.handshake.auth.gatewayid;
+  const gatewayid = socket.handshake.auth.gatewayid;
+
   try {
-    const gateway = await FindGateway(gatewayid);
+    if(!gatewayid){
+      auth(socket.handshake.auth.token,socket,next);
+      if(socket.user){
+        const index = socketUserId.findIndex((obj)=>obj.user=socket.user);
+
+        if(index > -1)
+          socketUserId[index].socket = socket.id;
+        else
+          socketUserId.push({"user":socket.user,"socket":socket.id});
+
+          console.log("handshke:",socketUserId);
+          next();
+        
+      }
+    }
+    
+    else{
+      const gateway = await FindGateway(gatewayid);
   
 
-    console.log(socket.id);
-    if (!gateway) {
-      return next(new Error("invalid gatewayid"));
-    }
+      if (!gateway) {
+        return next(new Error("invalid gatewayid"));
+      }
   
-    socket.gatewayid = gatewayid;
-    next();
+      socket.gatewayid = gatewayid;
+      next();
+    }
     
   } catch (error) {
     console.error(error.message);
@@ -43,17 +62,17 @@ io.on('connect', function(socket){
 
     socket.on("clientMsg", ({ content, to }) => {
       console.log("content:",content);
-      userid =socket.id;
+      //userid =socket.id;
      socketmsg(content);
     });
 
-    setInterval(()=>{
+ /*   setInterval(()=>{
       console.log("snd",socket.id);
       socket.to(userid).emit("private",{
         content:"ok",
         from:socket.id
       })
-  },10000)
+  },10000)*/
 });
 
 
