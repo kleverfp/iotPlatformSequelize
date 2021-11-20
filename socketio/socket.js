@@ -3,17 +3,28 @@ const socketmsg = require('../src/routes/socket');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const FindGateway = require('../src/controllers/Gateway');
 let gatewayid ="";
 let userid ="";
 
-io.use((socket, next) => {
+io.use(async(socket, next) => {
   gatewayid = socket.handshake.auth.gatewayid;
-  console.log(gatewayid);
-  if (!gatewayid) {
-    return next(new Error("invalid gatewayid"));
+  try {
+    const gateway = await FindGateway(gatewayid);
+  
+
+    console.log(socket.id);
+    if (!gateway) {
+      return next(new Error("invalid gatewayid"));
+    }
+  
+    socket.gatewayid = gatewayid;
+    next();
+    
+  } catch (error) {
+    console.error(error.message);
   }
-  socket.gatewayid = gatewayid;
-  next();
+ 
 });
 
 io.on('connect', function(socket){
