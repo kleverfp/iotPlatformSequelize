@@ -2,10 +2,16 @@ const express = require('express');
 const socketmsg = require('../src/routes/socket');
 const app = express();
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http,{
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
 const FindGateway = require('../src/controllers/Gateway');
 let gatewayid ="";
 let userid ="";
+
 
 io.use(async(socket, next) => {
   gatewayid = socket.handshake.auth.gatewayid;

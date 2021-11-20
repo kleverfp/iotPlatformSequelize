@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useParams,useNavigate } from 'react-router-dom';
 import { getSensors,deleteSensor } from '../../actions/sensor';
+import { socketConnection } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,getSensorData,deleteSensor,sensor:{sensor}}) => {
+const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
 
     const {gatewayid} = useParams();
     useEffect(()=>{
         getSensors(gatewayid);
+        socketConnection(gatewayid);
         
     },[]);
    
