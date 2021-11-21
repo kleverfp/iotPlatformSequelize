@@ -2,12 +2,11 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useParams,useNavigate } from 'react-router-dom';
-import { getSensors,deleteSensor } from '../../actions/sensor';
-import { socketConnection } from '../../actions/socket';
+import { getSensors,deleteSensor,socketConnection } from '../../actions/sensor';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
+const Sensor = ({getSensors,socketConnection,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
     const {gatewayid} = useParams();
     
@@ -49,9 +48,9 @@ const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
                             <tbody>{sensor.map(snr =>(
                                 <tr key={snr.sensorid}>
                                     <td>{snr.sensorid}</td>
-                                    <td className="hide-sm">{snr.name}</td>
-                                    <td className="hide-sm">{snr.status}</td>
-                                    <td className="hide-sm">{snr.created_at}</td>
+                                    <td className={`hide-sm msg-${snr.status}`}>{snr.name}</td>
+                                    <td className={`hide-sm msg-${snr.status}`}>{snr.status}</td>
+                                    <td className={`hide-sm msg-${snr.status}`}>{snr.created_at}</td>
                                     <td>
                                     <button onClick={ () =>deleteHandler(snr.sensorid)} className="btn btn-danger">Delete</button>
                                     </td>
@@ -75,6 +74,7 @@ const Sensor = ({getSensors,deleteSensor,sensor:{sensor}}) => {
 Sensor.propTypes = {
     sensor:PropTypes.object.isRequired,
     getSensors:PropTypes.func.isRequired,
+    socketConnection:PropTypes.func.isRequired,
     deleteSensor:PropTypes.func.isRequired
 
 }
@@ -84,4 +84,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{getSensors,deleteSensor}) (Sensor)
+export default connect(mapStateToProps,{getSensors,deleteSensor,socketConnection}) (Sensor)

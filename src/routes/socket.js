@@ -4,7 +4,7 @@ const SensorData = require('../models/SensorData');
 
 const socketmsg = async(msg)=>{
 
-    console.log("ok");
+    
     const {gatewayid,sensorid,sensorData,sensorStatus} =msg;
 
 

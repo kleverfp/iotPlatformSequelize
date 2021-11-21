@@ -17,7 +17,7 @@ const socketUserId =[];
 
 io.use(async(socket, next) => {
   const gatewayid = socket.handshake.auth.gatewayid;
- 
+  console.log("gtw:",gatewayid);
   try {
     if(!gatewayid){
      
@@ -38,6 +38,7 @@ io.use(async(socket, next) => {
     else{
       
       const gateway = await FindGateway(gatewayid);
+      console.log("findgat",gateway);
   
 
       if (!gateway) 

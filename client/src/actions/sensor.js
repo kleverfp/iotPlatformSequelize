@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
+import io from 'socket.io-client';
 
 import {
     GET_SENSOR,
@@ -7,12 +8,30 @@ import {
     UPDATE_SENSOR
 } from './types'
 
+
+
+
+export const socketConnection = (gatewayid)=>dispatch=>{
+
+    const socket = io("http://localhost:5005");
+    socket.auth={token:localStorage.token};
+
+    socket.on('connect',()=>{
+        console.log("connect");
+    });
+
+    socket.on("client",(data)=>{
+        dispatch({
+            type:GET_SENSOR,
+            payload:data
+        })
+    })
+}
 export const getSensors = (gatewayid)=> async dispatch =>{
 
     try {
         
         const res = await axios.get(`/api/sensor/gateway/${gatewayid}`);
-       console.log(res.data);
         dispatch({
             type:GET_SENSOR,
             payload:res.data

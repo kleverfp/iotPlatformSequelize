@@ -66,6 +66,15 @@ img {
   text-align: center;
 }
 
+.msg-on{
+  color: var(--success-color) ;
+}
+
+.msg-off{
+  color: var(--danger-color) ;
+
+}
+
 .text-primary {
   color: var(--primary-color);
 }
