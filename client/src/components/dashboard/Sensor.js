@@ -2,7 +2,8 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useParams,useNavigate } from 'react-router-dom';
-import { getSensors,deleteSensor,socketConnection } from '../../actions/sensor';
+import { getSensors,deleteSensor } from '../../actions/sensor';
+import { socketConnection } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 
 
