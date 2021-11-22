@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link,useParams,useNavigate } from 'react-router-dom';
 import { getSensors,deleteSensor } from '../../actions/sensor';
-import { socketConnection } from '../../actions/socket';
+import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,socketConnection,deleteSensor,sensor:{sensor}}) => {
+const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
     const {gatewayid} = useParams();
     
@@ -24,6 +24,10 @@ const Sensor = ({getSensors,socketConnection,deleteSensor,sensor:{sensor}}) => {
         navigate('/dashboard');
         
     } 
+
+    const serverMessageHandler = (sensorid)=>{
+       sendMessageToServer(sensorid,gatewayid);
+    }
       
     const deleteHandler= async (sensorid) =>{
             deleteSensor(sensorid,gatewayid);
@@ -53,6 +57,9 @@ const Sensor = ({getSensors,socketConnection,deleteSensor,sensor:{sensor}}) => {
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.status}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.created_at}</td>
                                     <td>
+                                    <button onClick={ () =>serverMessageHandler(snr.sensorid)} className="btn btn-success">Send</button>
+                                    </td>
+                                    <td>
                                     <button onClick={ () =>deleteHandler(snr.sensorid)} className="btn btn-danger">Delete</button>
                                     </td>
                                 </tr>))}
@@ -76,7 +83,8 @@ Sensor.propTypes = {
     sensor:PropTypes.object.isRequired,
     getSensors:PropTypes.func.isRequired,
     socketConnection:PropTypes.func.isRequired,
-    deleteSensor:PropTypes.func.isRequired
+    deleteSensor:PropTypes.func.isRequired,
+    sendMessageToServer:PropTypes.func.isRequired,
 
 }
 
@@ -85,4 +93,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{getSensors,deleteSensor,socketConnection}) (Sensor)
+export default connect(mapStateToProps,{getSensors,deleteSensor,socketConnection,sendMessageToServer}) (Sensor)

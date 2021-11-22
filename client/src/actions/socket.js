@@ -5,13 +5,13 @@ import {
     GET_SENSOR
 } from './types'
 
-
+let socket=[];
 
 
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
-    const socket = io("http://localhost:5005",{
+    socket = io("http://localhost:5005",{
         auth:{
             token:localStorage.token
         },
@@ -21,7 +21,7 @@ export const socketConnection = (gatewayid)=>dispatch=>{
     });
    
     socket.on('connect',()=>{
-        console.log("connect");
+        console.log(socket.id);
     });
 
     socket.on("client",(data)=>{
@@ -30,4 +30,14 @@ export const socketConnection = (gatewayid)=>dispatch=>{
             payload:data
         })
     })
+}
+
+export const sendMessageToServer = (sensorid,gatewayid)=>dispatch=>{
+    console.log(`call ${sensorid}`);
+    socket.emit("server",{'content':{
+        "sensorid":sensorid,
+        "gatewayid":gatewayid
+        }
+    });
+    dispatch(setAlert('message send to server','success'));
 }

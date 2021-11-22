@@ -22,18 +22,17 @@ io.use(async(socket, next) => {
     if(!gatewayid){
 
       auth(socket.handshake.auth.token,socket,next);
-      console.log("ok");
+     
       if(socket.user){
         const index = socketUserId.findIndex((obj)=>obj.user==socket.user);
-        console.log("index",index);
+       
         if(index > -1){
-          console.log("ok2");
-          console.log("gtwNew:",socket.handshake.query.gateway);
+ 
           socketUserId[index].socket = socket.id;
           socketUserId[index].gatewayid = socket.handshake.query.gateway;
         }
         else{
-          console.log("ok3");
+         
           console.log(socket.handshake.query);
           socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
         }
@@ -43,10 +42,9 @@ io.use(async(socket, next) => {
     }
     
     else{
-      console.log("gtwid:",gatewayid);
+     
       const gateway = await FindGateway(gatewayid);
      
-  
 
       if (!gateway) 
         return next(new Error("invalid gatewayid"));
@@ -73,12 +71,11 @@ io.on('connect', function(socket){
         try {
           
           const indexGateway = socketGatewayId.findIndex((gtw)=>gtw.gatewayid == content.gatewayid);
-          console.log("socketUsr:",socketUserId);
-          console.log("indexGtw",indexGateway);
+         
           if(indexGateway> -1){
             await socketmsg(content);
             const indexUser = socketUserId.findIndex((usr)=> usr.gatewayid == socketGatewayId[indexGateway].gatewayid);
-            console.log("indexUsr",indexUser);
+            
             if(indexUser > -1){
               const data =  await GetSensorData(socketGatewayId[indexGateway].gatewayid);
               socket.to(socketUserId[indexUser].socket).emit("client",data);
@@ -93,12 +90,10 @@ io.on('connect', function(socket){
      
     });
 
-    socket.on("clientMsg", async(data)=>{
-      try {
-        
-      } catch (error) {
-        console.error(error.message);
-      }
+    socket.on("server", ({content})=>{
+      
+        console.log(content.sensorid);
+      
     })
 
 
