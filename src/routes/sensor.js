@@ -12,7 +12,6 @@ router.post('/new/:gatewayId',auth,[
     body('type','sensor type is required').trim().not().isEmpty(),
 ],async(req,res)=>{
     const errors = validationResult(req);
-    console.log(req.body);
 
     if(!errors.isEmpty())
         return res.status(400).json({errors:[{msg:errors.array()}]});
@@ -22,9 +21,7 @@ router.post('/new/:gatewayId',auth,[
         const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}}) ;
 
         let sensor = await Sensor.findAll({where:{gateway_id:gateway.id}});
-        console.log(sensor);
 
-        
         const msgError =[];
         const sensorName = sensor.map((sensorItem)=>sensorItem.name).indexOf(name);
        
@@ -91,11 +88,10 @@ router.get('/gateway/:gatewayid',async (req,res)=>{
         if(!results)
             return res.status(400).json({msg:'no sensors'});
 
-        console.log(results);
         res.json(results);
 
     } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
         res.status(500).json({msg:'server error'});
     }
 });
@@ -127,7 +123,7 @@ router.delete('/:gatewayid/:sensorId',auth,async (req,res)=>{
         
         
     } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
         res.status(500).json({msg:'server error'});
     }
 });

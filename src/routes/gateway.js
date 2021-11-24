@@ -19,7 +19,7 @@ router.get('/:gatewayId',auth,async(req,res)=>{
         return res.json(gateway);
         
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).json({errors:[{msg:'server error'}]});
     }
 });
@@ -50,7 +50,7 @@ router.post('/new',auth,[
     body('gatewayid','gatewayid is required').trim().not().isEmpty()
 
 ],async (req,res)=>{
-    console.log(req.body);
+  
     const errors =validationResult(req);
     if(!errors.isEmpty())
         return res.status(400).json({msg:errors.array()});
@@ -72,7 +72,6 @@ router.post('/new',auth,[
         if(gatewayExistId  >= 0)
             msgError.push({error:'gatewayId already existis'});
 
-        console.log(msgError);
 
         if(msgError.length > 0)
             return res.status(400).json({errors:[{msg:msgError}]});
@@ -125,7 +124,7 @@ router.delete('/:gatewayId',auth,async(req,res)=>{
 
         
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).json({errors:[{msg:'server error'}]});
     }
 });

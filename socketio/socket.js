@@ -31,11 +31,9 @@ io.use(async(socket, next) => {
           socketUserId[index].socket = socket.id;
           socketUserId[index].gatewayid = socket.handshake.query.gateway;
         }
-        else{
-         
-          console.log(socket.handshake.query);
+        else
           socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
-        }
+        
         next();
         
       }
@@ -67,11 +65,11 @@ io.use(async(socket, next) => {
 
 io.on('connect', function(socket){
   
-      socket.on("gatewayMsg", async({ content, to }) => {
+    socket.on("gatewayMsg", async({ content, to }) => {
         try {
           
           const indexGateway = socketGatewayId.findIndex((gtw)=>gtw.gatewayid == content.gatewayid);
-         
+          console.log(content);
           if(indexGateway> -1){
             await socketmsg(content);
             const indexUser = socketUserId.findIndex((usr)=> usr.gatewayid == socketGatewayId[indexGateway].gatewayid);
@@ -91,11 +89,15 @@ io.on('connect', function(socket){
     });
 
     socket.on("server", ({content})=>{
+      console.log(content);
+      const index = socketGatewayId.findIndex((obj)=>obj.gatewayid==content.gatewayid);
+      console.log("idx",index);
+      if(index > -1){
+        console.log("emit");
+        socket.to(socketGatewayId[index].socket).emit("RecieveFromServer",content);
+      }
       
-        console.log(content.sensorid);
-      
-    })
-
+    });
 
 });
 
