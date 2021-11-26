@@ -66,11 +66,11 @@ img {
   text-align: center;
 }
 
-.msg-on{
+.msg-off{
   color: var(--success-color) ;
 }
 
-.msg-off{
+.msg-on{
   color: var(--danger-color) ;
 
 }

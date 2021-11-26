@@ -28,7 +28,9 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
             setShow([...show,{id}]);
     }
         
-
+    const resetSensorHandler = (id)=>{
+        sendMessageToServer(id,gatewayid,"reset");
+    }
     const createSensorHandler = (e)=>{
         navigate(`/create-sensor/${gatewayid}`);
     }    
@@ -69,7 +71,7 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
                                 <tr key={snr.sensorid}>
                                     <td>{snr.sensorid}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.name}</td>
-                                    <td className={`hide-sm msg-${snr.status}`}>{snr.status}</td>
+                                    <td className={`hide-sm msg-${snr.status}`}>{snr.status=="on"?"ocupado":"disponivel"}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.created_at}</td>
                                     <td>
                                         <button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">Commands</button>
@@ -84,7 +86,7 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
                                         <td><input type="text" placeholder="type"></input></td>
                                         <td><input type="text" placeholder="value"></input></td>
                                         <td><button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">send</button></td>
-                                        <td><button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">reset</button></td>
+                                        <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset</button></td>
                                     </tr>
                                     } 
                                 </Fragment>
