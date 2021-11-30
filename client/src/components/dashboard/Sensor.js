@@ -93,8 +93,6 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
                                 
                         
                             ))}
-                               
-
                             </tbody>
                         </table>
                         <button onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
