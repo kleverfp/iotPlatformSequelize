@@ -55,7 +55,6 @@ export const createSensor = (gatewayid,formData,navigate) => async dispatch =>{
     }
 }
 
-
 export const deleteSensor = (sensorid,gatewayid) => async(dispatch) =>{
 
     try {
