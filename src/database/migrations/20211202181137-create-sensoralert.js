@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement:true,
         allowNull:false
       }, 
-      sensor_id:{
+      gateway_id:{
         type:Sequelize.INTEGER,
         allowNull:false,
         references:{model:'gateways',key:'id'},
