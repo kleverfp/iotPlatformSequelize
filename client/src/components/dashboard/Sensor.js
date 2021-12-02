@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {Link,useParams,useNavigate } from 'react-router-dom';
+import {useParams,useNavigate } from 'react-router-dom';
 import { getSensors,deleteSensor } from '../../actions/sensor';
 import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
@@ -10,14 +10,44 @@ import Spinner from '../layout/Spinner';
 const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor}}) => {
     const navigate = useNavigate();
     const {gatewayid} = useParams();
-    let showStatus = false;
+    const [show,setShow] = useState([]);
+    const [elapsed,setElapsed]= useState([]);
+    
+
     useEffect(()=>{
         getSensors(gatewayid);
         socketConnection(gatewayid);
-        
+
+      
     },[]);
 
-    const [show,setShow] = useState([]);
+    useEffect(()=>{
+        const interval=  setInterval(()=>{
+            if(sensor !== null && sensor.length > 0) updateElapsedTime();
+            console.log(elapsed);
+         },10000);
+         return ()=>clearInterval(interval);
+    },[sensor])
+
+
+   
+    const updateElapsedTime =()=>{
+        
+            const result = sensor.map((snr)=>{
+                const time = Math.abs(Date.now()  - new Date(snr.lastTimeOn));
+                const minutes = Math.floor(time/(1000*60));
+                let hour  = Math.floor(minutes/60);
+                let min = minutes - hour*60;
+                if(hour < 10)
+                    hour = `0${hour}`;
+                if(min < 10)
+                    min = `0${min}`;
+                
+                return `${hour}:${min}`;
+            
+        });
+        setElapsed(result);
+    }
     const showControlsHandler = (id)=>{
 
         const index = show.findIndex((sw)=>sw.id==id);
@@ -39,16 +69,19 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
         
     } 
 
-    const serverMessageHandler = (sensorid)=>{
-       sendMessageToServer(sensorid,gatewayid);
+   const timeOnHandler = (sensorid)=>{
+        const index = elapsed.findIndex((el)=>el.id == sensorid);
+        if(index > -1)
+            return elapsed[index].timeOn;
        
     }
-      
+   
     const deleteHandler= async (sensorid) =>{
             deleteSensor(sensorid,gatewayid);
     }
 
-   
+  
+
     return (
         <section className="container">{
             (sensor ===null)  ? (<Spinner/>):(
@@ -66,13 +99,14 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
                                     <th className='hide-sm'>last update</th>
                                 </tr>
                             </thead>
-                            <tbody>{sensor.map(snr =>(
+                            <tbody>{sensor.map((snr,index) =>(
                                 <Fragment key={`frg-01${snr.sensorid}`}>
                                 <tr key={snr.sensorid}>
                                     <td>{snr.sensorid}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.name}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.status=="on"?"ocupado":"disponivel"}</td>
                                     <td className={`hide-sm msg-${snr.status}`}>{snr.created_at}</td>
+                                    <td className={`hide-sm msg-${snr.status}`}>{elapsed[index] && elapsed[index]}</td>
                                     <td>
                                         <button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">Commands</button>
                                     </td>
