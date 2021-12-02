@@ -11,8 +11,9 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
     const navigate = useNavigate();
     const {gatewayid} = useParams();
     const [show,setShow] = useState([]);
+    const [showAlarm,setShowAlarm] = useState(false);
     const [elapsed,setElapsed]= useState([]);
-    
+    const [alarmTime,setAlarmTime] = useState(0);
 
     useEffect(()=>{
         getSensors(gatewayid);
@@ -25,25 +26,38 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
         const interval=  setInterval(()=>{
             if(sensor !== null && sensor.length > 0) updateElapsedTime();
             console.log(elapsed);
-         },10000);
+         },1000);
          return ()=>clearInterval(interval);
     },[sensor])
 
 
    
     const updateElapsedTime =()=>{
-        
+          
+            let hour=0;
+            let min=0;
+            let sec=0;
             const result = sensor.map((snr)=>{
-                const time = Math.abs(Date.now()  - new Date(snr.lastTimeOn));
-                const minutes = Math.floor(time/(1000*60));
-                let hour  = Math.floor(minutes/60);
-                let min = minutes - hour*60;
+                if(snr.status =='off'){
+                    hour=0;min=0; sec=0;
+                }
+                else{
+                     const time = Math.abs(Date.now()  - new Date(snr.lastTimeOn));
+                     const timesec = time/1000;
+                     const minutes = Math.floor(time/(1000*60));
+                     hour  = Math.floor(minutes/60);
+                     min = minutes - hour*60;
+                     sec = Math.floor(timesec - hour*60*60 - min*60);
+                }
+               
                 if(hour < 10)
                     hour = `0${hour}`;
                 if(min < 10)
                     min = `0${min}`;
+                if(sec < 10)
+                    sec = `0${sec}`;
                 
-                return `${hour}:${min}`;
+                return `${hour}:${min}:${sec}`;
             
         });
         setElapsed(result);
@@ -68,20 +82,27 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
         navigate('/dashboard');
         
     } 
-
-   const timeOnHandler = (sensorid)=>{
-        const index = elapsed.findIndex((el)=>el.id == sensorid);
-        if(index > -1)
-            return elapsed[index].timeOn;
-       
-    }
    
     const deleteHandler= async (sensorid) =>{
-            deleteSensor(sensorid,gatewayid);
+        deleteSensor(sensorid,gatewayid);
     }
 
-  
+    const setAlaramHandler = (e)=>{
+        setShowAlarm(!showAlarm);
+    }
+    const alarmHandler =(e)=>{
+        if(e.target.value < 0)
+            e.target.value =0;
 
+        setAlarmTime(e.target.value);
+    }
+    const saveAlarm = (e)=>{
+        
+    }
+
+    
+
+  
     return (
         <section className="container">{
             (sensor ===null)  ? (<Spinner/>):(
@@ -130,7 +151,15 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
                             </tbody>
                         </table>
                         <button onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
+                        <button className="btn btn-primary my-1" onClick={setAlaramHandler}>Alarm</button>
                         <button className="btn btn-light my-1" onClick={dashboardHandler}>Go Back</button>
+                        {showAlarm && 
+                            <form className="form">
+                                <div className="form-group">
+                                    <input  placeholder="time in minutes" className="input-alarm" name="time" onChange={alarmHandler} />
+                                    <button className="btn btn-success m-1" onClick={saveAlarm}>save</button>
+                                </div>
+                            </form>}
                    </Fragment>):(<Fragment>
                     <p>No sensor registered.</p>
                     <button   onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>

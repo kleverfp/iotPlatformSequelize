@@ -248,6 +248,8 @@ img {
   margin: 1.2rem 0;
 }
 
+
+
 .form .form-text {
   display: block;
   margin-top: 0.3rem;
@@ -258,6 +260,7 @@ img {
 .form input[type='email'],
 .form input[type='password'],
 .form input[type='date'],
+.form input[type='number'],
 .form select,
 .form textarea {
   display: block;
@@ -295,6 +298,13 @@ button {
 }
 .form .social-input i.fa-linkedin {
   color: #0077b5;
+}
+
+.input-alarm{
+  width: 50%;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
 }
 
 .table th,
