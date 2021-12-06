@@ -9,7 +9,6 @@ import {
 
 
 
-
 export const getSensors = (gatewayid)=> async dispatch =>{
 
     try {
@@ -83,4 +82,6 @@ export const deleteSensor = (sensorid,gatewayid) => async(dispatch) =>{
     }
 
 }
+
+
 

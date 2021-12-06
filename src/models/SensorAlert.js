@@ -1,5 +1,5 @@
 const {Model,DataTypes}  = require('sequelize');
-class SensorAlert extends Model {
+class sensor_alerts extends Model {
     static init(sequelize){
         super.init({
             period:DataTypes.STRING,
@@ -12,4 +12,4 @@ class SensorAlert extends Model {
     }
 }
 
-module.exports = SensorAlert;
+module.exports = sensor_alerts;

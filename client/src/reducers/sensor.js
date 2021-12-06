@@ -1,4 +1,4 @@
-import { CLEAR_SENSOR, SENSOR_ERROR, GET_SENSOR, UPDATE_SENSOR } from "../actions/types";
+import { CLEAR_SENSOR, SENSOR_ERROR, GET_SENSOR, UPDATE_SENSOR} from "../actions/types";
 
 
 const initialState ={

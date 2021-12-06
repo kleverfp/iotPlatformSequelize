@@ -15,6 +15,10 @@ export const GET_GATEWAY='GET_GATEWAY';
 export const GATEWAY_ERROR='GATEWAY_ERROR';
 export const CLEAR_GATEWAY='CLEAR_GATEWAY';
 export const UPDATE_GATEWAY ='UPDATE_GATEWAY'; 
+export const SET_ALARM ='SET_ALARM'; 
+export const GET_ALARM ='GET_ALARM'; 
+export const ALARM_ERROR ='ALARM_ERROR'; 
+
 
 
 

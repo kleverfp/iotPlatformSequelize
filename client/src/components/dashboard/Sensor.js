@@ -3,29 +3,32 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {useParams,useNavigate } from 'react-router-dom';
 import { getSensors,deleteSensor } from '../../actions/sensor';
+import { getAlarm, setAlarm } from '../../actions/sensorAlarm';
 import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor}}) => {
+const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},alarm}) => {
     const navigate = useNavigate();
     const {gatewayid} = useParams();
     const [show,setShow] = useState([]);
     const [showAlarm,setShowAlarm] = useState(false);
     const [elapsed,setElapsed]= useState([]);
-    const [alarmTime,setAlarmTime] = useState(0);
-
+    const [formData,setFormData]  = useState({
+        period:'',
+        gatewayid
+    });
     useEffect(()=>{
         getSensors(gatewayid);
         socketConnection(gatewayid);
-
-      
+        getAlarm(gatewayid);
+        
     },[]);
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
             if(sensor !== null && sensor.length > 0) updateElapsedTime();
-            console.log(elapsed);
+            //console.log(elapsed);
          },1000);
          return ()=>clearInterval(interval);
     },[sensor])
@@ -90,19 +93,20 @@ const Sensor = ({getSensors,sendMessageToServer,socketConnection,deleteSensor,se
     const setAlaramHandler = (e)=>{
         setShowAlarm(!showAlarm);
     }
+
     const alarmHandler =(e)=>{
         if(e.target.value < 0)
             e.target.value =0;
 
-        setAlarmTime(e.target.value);
+       setFormData({...formData,period:e.target.value});
     }
+
     const saveAlarm = (e)=>{
-        
+        e.preventDefault();
+        setAlarm(formData);
     }
 
     
-
-  
     return (
         <section className="container">{
             (sensor ===null)  ? (<Spinner/>):(
@@ -178,12 +182,15 @@ Sensor.propTypes = {
     socketConnection:PropTypes.func.isRequired,
     deleteSensor:PropTypes.func.isRequired,
     sendMessageToServer:PropTypes.func.isRequired,
+    getAlarm:PropTypes.func.isRequired,
+    setAlarm:PropTypes.func.isRequired
 
 }
 
 const mapStateToProps = state =>({
-    sensor:state.sensor
+    sensor:state.sensor,
+    alarm:state.alarm
 })
 
 
-export default connect(mapStateToProps,{getSensors,deleteSensor,socketConnection,sendMessageToServer}) (Sensor)
+export default connect(mapStateToProps,{getSensors,setAlarm,getAlarm,deleteSensor,socketConnection,sendMessageToServer}) (Sensor)

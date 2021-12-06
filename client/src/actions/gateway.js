@@ -31,7 +31,6 @@ export const getGateways = ()=> async dispatch =>{
     }
 }
 
-
 export const createGateway = (formData,navigate,edit=false)=> async dispatch =>{
     try {
         const config = {
