@@ -196,7 +196,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                         {showAlarm && 
                             <form className="form">
                                 <div className="form-group">
-                                    <input  placeholder="time in minutes" className="input-alarm" name="time" onChange={alarmHandler} />
+                                    <input  placeholder="time in minutes" type="number" className="input-alarm" name="time" onChange={alarmHandler} />
                                     <button className="btn btn-success m-1" onClick={saveAlarm}>save</button>
                                 </div>
                             </form>}
