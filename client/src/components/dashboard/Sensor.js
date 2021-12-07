@@ -14,7 +14,6 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
     const [show,setShow] = useState([]);
     const [showAlarm,setShowAlarm] = useState(false);
     const [elapsed,setElapsed]= useState([]);
-    const [layoutTagTd,setlayoutTagTd] = useState([]);
     const [alarmTime,setAlarmTime] = useState(null);
     const [formData,setFormData]  = useState({
         period:'',
@@ -69,8 +68,21 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                     min = `0${min}`;
                 if(sec < 10)
                     sec = `0${sec}`;
+
+                    let layout ='';
+                    const time = `${hour}:${min}:${sec}`;
+                    
+                    if(alarm !== null){
+                       
+                        const hours = Math.floor(alarm.period/60);
+                        const minutes = alarm.period - 60*hours;
+                        const alarmTime = `${hours}:${minutes}:00`;
+                        const second = time.slice(time.lastIndexOf(':')+1);
+                        if(Date.parse('01/01/2021 ' + time) > Date.parse( '01/01/2021 '+ alarmTime) && (second %2 ==0))
+                            layout =  'td-background';
+                    }
                 
-                return `${hour}:${min}:${sec}`;
+                return {time:`${hour}:${min}:${sec}`, layout};
             
         });
         setElapsed(result);
@@ -119,26 +131,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         setAlarm(formData);
     }
 
-    const alarmActive= (time) =>{
-        
-            
-            if(alarm !== null && time !== null){
-            const hours = Math.floor(alarm.period/60);
-            const minutes = alarm.period - 60*hours;
-            const alarmTime = `${hours}:${minutes}:00`;
-                if(Date.parse('01/01/2021 ' + time) > Date.parse( '01/01/2021 '+ alarmTime)){
-                    const second = time.toString().slice(time.lastIndexOf(':')+1);
-                    if(second %2 ==0)
-                        return 'td-background';
-                    else
-                        return 'hide-sm msg-off';
-                }
-                else
-                    return 'hide-sm msg-off';
-                
-            }
-
-    }
+  
    
 
    
@@ -163,11 +156,11 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                
                                 <Fragment key={`frg-01${snr.sensorid}`}>
                                 <tr  key={snr.sensorid}>
-                                    <td >{snr.sensorid}</td>
-                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.name}</td>
-                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.status=="on"?"ocupado":"disponivel"}</td>
-                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.created_at}</td>
-                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{elapsed[index] && elapsed[index]}</td>
+                                    <td className={elapsed[index] && elapsed[index].layout}>{snr.sensorid}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{snr.name}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}` }>{snr.status=="on"?"ocupado":"disponivel"}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{snr.created_at}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{elapsed[index] && elapsed[index].time}</td>
                                     <td>
                                         <button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">Commands</button>
                                     </td>
