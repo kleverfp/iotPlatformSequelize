@@ -29,7 +29,7 @@ export const getAlarm = (gatewayid) => async dispatch =>{
    
     try {
         const res = await axios.get(`/api/sensoralert/${gatewayid}`);
-        
+        console.log(res.data);
         dispatch({
             type:GET_ALARM,
             payload:res.data

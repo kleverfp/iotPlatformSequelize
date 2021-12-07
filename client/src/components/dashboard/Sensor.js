@@ -8,12 +8,14 @@ import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 
 
-const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},alarm}) => {
+const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},sensorAlarm:{alarm}}) => {
     const navigate = useNavigate();
     const {gatewayid} = useParams();
     const [show,setShow] = useState([]);
     const [showAlarm,setShowAlarm] = useState(false);
     const [elapsed,setElapsed]= useState([]);
+    const [layoutTagTd,setlayoutTagTd] = useState([]);
+    const [alarmTime,setAlarmTime] = useState(null);
     const [formData,setFormData]  = useState({
         period:'',
         gatewayid
@@ -23,12 +25,17 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         socketConnection(gatewayid);
         getAlarm(gatewayid);
         
+        
     },[]);
+
+    useEffect(()=>{
+        alarm && setAlarmTime(alarm.period);
+    },[alarm])
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
             if(sensor !== null && sensor.length > 0) updateElapsedTime();
-            //console.log(elapsed);
+        
          },1000);
          return ()=>clearInterval(interval);
     },[sensor])
@@ -40,14 +47,17 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
             let hour=0;
             let min=0;
             let sec=0;
+            let minutes =0;
             const result = sensor.map((snr)=>{
+                
                 if(snr.status =='off'){
                     hour=0;min=0; sec=0;
                 }
                 else{
                      const time = Math.abs(Date.now()  - new Date(snr.lastTimeOn));
                      const timesec = time/1000;
-                     const minutes = Math.floor(time/(1000*60));
+                     minutes = Math.floor(time/(1000*60));
+                     
                      hour  = Math.floor(minutes/60);
                      min = minutes - hour*60;
                      sec = Math.floor(timesec - hour*60*60 - min*60);
@@ -65,6 +75,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         });
         setElapsed(result);
     }
+
     const showControlsHandler = (id)=>{
 
         const index = show.findIndex((sw)=>sw.id==id);
@@ -78,9 +89,11 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
     const resetSensorHandler = (id)=>{
         sendMessageToServer(id,gatewayid,"reset");
     }
+
     const createSensorHandler = (e)=>{
         navigate(`/create-sensor/${gatewayid}`);
-    }    
+    }   
+
     const dashboardHandler = (e)=>{
         navigate('/dashboard');
         
@@ -106,7 +119,29 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         setAlarm(formData);
     }
 
-    
+    const alarmActive= (time) =>{
+        
+            
+            if(alarm !== null && time !== null){
+            const hours = Math.floor(alarm.period/60);
+            const minutes = alarm.period - 60*hours;
+            const alarmTime = `${hours}:${minutes}:00`;
+                if(Date.parse('01/01/2021 ' + time) > Date.parse( '01/01/2021 '+ alarmTime)){
+                    const second = time.toString().slice(time.lastIndexOf(':')+1);
+                    if(second %2 ==0)
+                        return 'td-background';
+                    else
+                        return 'hide-sm msg-off';
+                }
+                else
+                    return 'hide-sm msg-off';
+                
+            }
+
+    }
+   
+
+   
     return (
         <section className="container">{
             (sensor ===null)  ? (<Spinner/>):(
@@ -125,13 +160,14 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                 </tr>
                             </thead>
                             <tbody>{sensor.map((snr,index) =>(
+                               
                                 <Fragment key={`frg-01${snr.sensorid}`}>
-                                <tr key={snr.sensorid}>
-                                    <td>{snr.sensorid}</td>
-                                    <td className={`hide-sm msg-${snr.status}`}>{snr.name}</td>
-                                    <td className={`hide-sm msg-${snr.status}`}>{snr.status=="on"?"ocupado":"disponivel"}</td>
-                                    <td className={`hide-sm msg-${snr.status}`}>{snr.created_at}</td>
-                                    <td className={`hide-sm msg-${snr.status}`}>{elapsed[index] && elapsed[index]}</td>
+                                <tr  key={snr.sensorid}>
+                                    <td >{snr.sensorid}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.name}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.status=="on"?"ocupado":"disponivel"}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{snr.created_at}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${alarmActive(elapsed[index])}`}>{elapsed[index] && elapsed[index]}</td>
                                     <td>
                                         <button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">Commands</button>
                                     </td>
@@ -142,8 +178,8 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                 {(show.findIndex((obj)=>obj.id==snr.sensorid) > -1) && 
                                     
                                     <tr>
-                                        <td><input type="text" placeholder="type"></input></td>
-                                        <td><input type="text" placeholder="value"></input></td>
+                                        <td><input className="input-cmd" placeholder="type"></input></td>
+                                        <td><input className="input-cmd" placeholder="value"></input></td>
                                         <td><button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">send</button></td>
                                         <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset</button></td>
                                     </tr>
@@ -178,6 +214,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
 
 Sensor.propTypes = {
     sensor:PropTypes.object.isRequired,
+    sensorAlarm:PropTypes.object.isRequired,
     getSensors:PropTypes.func.isRequired,
     socketConnection:PropTypes.func.isRequired,
     deleteSensor:PropTypes.func.isRequired,
@@ -189,7 +226,7 @@ Sensor.propTypes = {
 
 const mapStateToProps = state =>({
     sensor:state.sensor,
-    alarm:state.alarm
+    sensorAlarm:state.sensorAlarm
 })
 
 

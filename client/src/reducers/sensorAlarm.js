@@ -2,6 +2,7 @@ import {ALARM_ERROR, GET_ALARM, SET_ALARM} from "../actions/types";
 
 const initialState ={
     alarm : null,
+    loading : true,
     error:{}
 };
 
@@ -14,12 +15,14 @@ export default function (state= initialState, action){
         case GET_ALARM:
             return{
                 ...state,
-                alarm:payload
+                alarm:payload,
+                loading:false
             };
         case ALARM_ERROR:
             return{
                 ...state,
-                error:payload
+                error:payload,
+                loading:false
             }
 
         default:

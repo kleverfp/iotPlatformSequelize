@@ -307,6 +307,13 @@ button {
   border: 1px solid #ccc;
 }
 
+.input-cmd{
+  width: 90%;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+}
+
 .table th,
 .table td {
   padding: 1rem;
@@ -602,4 +609,9 @@ button {
   width: 80%;
   text-align: left;
   display: inline-block;
+}
+
+.td-background{
+  color: #fff;
+  background-color: var(--danger-color);
 }
