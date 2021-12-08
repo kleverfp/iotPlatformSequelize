@@ -13,13 +13,38 @@ const FindGateway = require('../src/controllers/Gateway');
 const GetSensorData = require('../src/controllers/SensorData');
 const socketGatewayId =[];
 const socketUserId =[];
+let socketActuatorId='';
 
 
 io.use(async(socket, next) => {
   const gatewayid = socket.handshake.auth.gatewayid;
+  const actuator  = socket.handshake.auth.actuatorid;
   
   try {
-    if(!gatewayid){
+   
+    if(actuator){
+      console.log(actuator);
+      socketActuatorId = socket.id;
+
+      next();
+    }
+    else if(gatewayid){
+     
+      const gateway = await FindGateway(gatewayid);
+     
+      if (!gateway) 
+        return next(new Error("invalid gatewayid"));
+      
+      const index = socketGatewayId.findIndex((obj)=>obj.gateway==gateway.id);
+
+      if(index > -1)
+        socketGatewayId[index].socket = socket.id;
+      else
+        socketGatewayId.push({"gateway":gateway.id,"gatewayid":gateway.gatewayid,"socket":socket.id});
+    
+      next();
+    }
+    else{
 
       auth(socket.handshake.auth.token,socket,next);
      
@@ -39,24 +64,6 @@ io.use(async(socket, next) => {
       }
     }
     
-    else{
-     
-      const gateway = await FindGateway(gatewayid);
-     
-
-      if (!gateway) 
-        return next(new Error("invalid gatewayid"));
-      
-      const index = socketGatewayId.findIndex((obj)=>obj.gateway==gateway.id);
-
-      if(index > -1)
-        socketGatewayId[index].socket = socket.id;
-      else
-        socketGatewayId.push({"gateway":gateway.id,"gatewayid":gateway.gatewayid,"socket":socket.id});
-    
-      next();
-    }
-    
   } catch (error) {
     console.error(error.message);
   }
@@ -67,9 +74,9 @@ io.on('connect', function(socket){
   
     socket.on("gatewayMsg", async({ content, to }) => {
         try {
-          
+          socket.to(socketUserId).emit('actuatorMsg',content);
           const indexGateway = socketGatewayId.findIndex((gtw)=>gtw.gatewayid == content.gatewayid);
-          console.log(content);
+          
           if(indexGateway> -1){
             await socketmsg(content);
             const indexUser = socketUserId.findIndex((usr)=> usr.gatewayid == socketGatewayId[indexGateway].gatewayid);
@@ -77,10 +84,10 @@ io.on('connect', function(socket){
             if(indexUser > -1){
               const data =  await GetSensorData(socketGatewayId[indexGateway].gatewayid);
               socket.to(socketUserId[indexUser].socket).emit("client",data);
+              
             }
           }
-         
-         
+
 
         } catch (error) {
           console.error(error.message);
@@ -89,15 +96,14 @@ io.on('connect', function(socket){
     });
 
     socket.on("server", ({content})=>{
-      console.log(content);
+     
       const index = socketGatewayId.findIndex((obj)=>obj.gatewayid==content.gatewayid);
-      console.log("idx",index);
-      if(index > -1){
-        console.log("emit");
+      if(index > -1)
         socket.to(socketGatewayId[index].socket).emit("RecieveFromServer",content);
-      }
+      
       
     });
+
 
 });
 
