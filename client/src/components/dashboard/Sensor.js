@@ -25,6 +25,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         getAlarm(gatewayid);
         
         
+        
     },[]);
 
     useEffect(()=>{
@@ -33,11 +34,12 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
-            if(sensor !== null && sensor.length > 0) updateElapsedTime();
+            if(sensor !== null && sensor.length > 0) 
+                updateElapsedTime();
         
          },1000);
          return ()=>clearInterval(interval);
-    },[sensor])
+    },[sensor,alarm])
 
 
    
