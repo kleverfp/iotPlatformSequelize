@@ -23,9 +23,7 @@ io.use(async(socket, next) => {
   try {
    
     if(actuator){
-      console.log(actuator);
       socketActuatorId = socket.id;
-
       next();
     }
     else if(gatewayid){

@@ -18,6 +18,11 @@ router.post('/new/:gatewayId',auth,[
     
     const {name,sensorid,type,communication,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body; 
     try {
+        
+        const sensorBySensorId = await Sensor.findOne({where:{sensorid}});
+        if(sensorBySensorId)
+            return res.status(500).json({errors:[{msg:'sensorid already exists'}]});
+
         const gateway = await Gateway.findOne({where:{gatewayid:req.params.gatewayId}}) ;
 
         let sensor = await Sensor.findAll({where:{gateway_id:gateway.id}});

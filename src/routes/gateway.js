@@ -58,7 +58,10 @@ router.post('/new',auth,[
     const {name,gatewayid,lon,lat,country,province,city,neighborhood,street,zipCode} = req.body;
  
     try{
-       
+        const gatewayByGatewayId = await Gateway.findOne({where:{gatewayid}});
+        if(gatewayByGatewayId)
+            return res.status(500).json({errors:[{msg:'gatewayid already exists'}]});
+            
         let gateway = await Gateway.findAll({where:{user_id:req.user.id}});
         
         const msgError =[];
