@@ -74,6 +74,9 @@ img {
   color: var(--danger-color) ;
 
 }
+.msg-null{
+  color:#E55D0E
+}
 
 .text-primary {
   color: var(--primary-color);

@@ -52,7 +52,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
             let minutes =0;
             const result = sensor.map((snr)=>{
                 
-                if(snr.status =='off'){
+                if(snr.status !=='on' ){
                     hour=0;min=0; sec=0;
                 }
                 else{
@@ -140,7 +140,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         else if(status =='off')
             return "disponivel"
         else
-            return 'no data'
+            return 'unknown'
     }
    
 
