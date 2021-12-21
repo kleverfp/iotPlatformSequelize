@@ -72,7 +72,7 @@ io.on('connect', function(socket){
   
     socket.on("gatewayMsg", async({ content, to }) => {
         try {
-          socket.to(socketUserId).emit('actuatorMsg',content);
+          socket.to(socketActuatorId).emit('actuatorMsg',content);
           const indexGateway = socketGatewayId.findIndex((gtw)=>gtw.gatewayid == content.gatewayid);
           
           if(indexGateway> -1){

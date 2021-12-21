@@ -23,7 +23,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         getSensors(gatewayid);
         socketConnection(gatewayid);
         getAlarm(gatewayid);
-        
+       
         
         
     },[]);
@@ -34,6 +34,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
+            console.log(sensor);
             if(sensor !== null && sensor.length > 0) 
                 updateElapsedTime();
         
@@ -133,7 +134,14 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         setAlarm(formData);
     }
 
-  
+    const statusNameHandler= (status)=>{
+        if(status=="on")
+            return "ocupado"
+        else if(status =='off')
+            return "disponivel"
+        else
+            return 'no data'
+    }
    
 
    
@@ -160,7 +168,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                 <tr  key={snr.sensorid}>
                                     <td className={elapsed[index] && elapsed[index].layout}>{snr.sensorid}</td>
                                     <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{snr.name}</td>
-                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}` }>{snr.status=="on"?"ocupado":"disponivel"}</td>
+                                    <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}` }>{statusNameHandler(snr.status)}</td>
                                     <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{snr.created_at}</td>
                                     <td className={`hide-sm msg-${snr.status} ${elapsed[index] && elapsed[index].layout}`}>{elapsed[index] && elapsed[index].time}</td>
                                     <td>
