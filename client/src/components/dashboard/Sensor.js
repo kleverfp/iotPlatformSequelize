@@ -191,11 +191,12 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                 {(show.findIndex((obj)=>obj.id==snr.sensorid) > -1) && 
                                     
                                     <tr>
+                                        <td></td>
                                         <td><label>sensibility:</label></td>
                                         <td>
                                         <Dropdown options={options} onChange={sensibilityHandler} value={defaultOption}/>
                                         </td>
-                                        <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset</button></td>
+                                        <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset sensor</button></td>
                                     </tr>
                                     } 
                                 </Fragment>
