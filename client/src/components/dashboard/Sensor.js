@@ -6,10 +6,13 @@ import { getSensors,deleteSensor } from '../../actions/sensor';
 import { getAlarm, setAlarm } from '../../actions/sensorAlarm';
 import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},sensorAlarm:{alarm}}) => {
     const navigate = useNavigate();
+
+     
     const {gatewayid} = useParams();
     const [show,setShow] = useState([]);
     const [showAlarm,setShowAlarm] = useState(false);
@@ -19,6 +22,10 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         period:'',
         gatewayid
     });
+
+    const options = ["1", "2", "3","4","5"];
+    const defaultOption = options[0];
+
     useEffect(()=>{
         getSensors(gatewayid);
         socketConnection(gatewayid);
@@ -34,7 +41,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
-            console.log(sensor);
+           
             if(sensor !== null && sensor.length > 0) 
                 updateElapsedTime();
         
@@ -143,6 +150,9 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
             return 'unknown'
     }
    
+    const sensibilityHandler = (e)=>{
+        console.log(e.value)
+    }
 
    
     return (
@@ -181,9 +191,10 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                 {(show.findIndex((obj)=>obj.id==snr.sensorid) > -1) && 
                                     
                                     <tr>
-                                        <td><input className="input-cmd" placeholder="type"></input></td>
-                                        <td><input className="input-cmd" placeholder="value"></input></td>
-                                        <td><button onClick={ () =>showControlsHandler(snr.sensorid)} className="btn btn-success">send</button></td>
+                                        <td><label>sensibility:</label></td>
+                                        <td>
+                                        <Dropdown options={options} onChange={sensibilityHandler} value={defaultOption}/>
+                                        </td>
                                         <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset</button></td>
                                     </tr>
                                     } 
