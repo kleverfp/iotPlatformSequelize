@@ -32,7 +32,8 @@ router.post('/gateway/:gatewayid/sensor/:sensorid',auth,[
         sensibilityFields.sensor_id = sensor.id;
         sensibilityFields.data = data;
            
-        const sensorSensibility = sensor_sensibility.findOne({where:{sensor_id:sensor.id}});
+        const sensorSensibility = await sensor_sensibility.findOne({where:{sensor_id:sensor.id}});
+        console.log(sensorSensibility);
         if(!sensorSensibility){
             
             const sensibility  = new sensor_sensibility(sensibilityFields);
