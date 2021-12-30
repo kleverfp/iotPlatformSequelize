@@ -223,9 +223,11 @@ const Sensor = ({getSensibility,setSensibility,getSensors,getAlarm,setAlarm,send
                             ))}
                             </tbody>
                         </table>
+                        <br/>
                         <button onClick={createSensorHandler} className="btn btn-primary my-1">Create sensor</button>
                         <button className="btn btn-primary my-1" onClick={setAlaramHandler}>Alarm</button>
                         <button className="btn btn-light my-1" onClick={dashboardHandler}>Go Back</button>
+                        <br/><br/><br/><br/>
                         {showAlarm && 
                             <form className="form">
                                 <div className="form-group">
