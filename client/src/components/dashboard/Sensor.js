@@ -112,7 +112,7 @@ const Sensor = ({getSensibility,setSensibility,getSensors,getAlarm,setAlarm,send
     }
         
     const resetSensorHandler = (id)=>{
-        sendMessageToServer(id,gatewayid,"reset");
+        sendMessageToServer(id,gatewayid,"reset","");
     }
 
     const createSensorHandler = (e)=>{
@@ -160,6 +160,7 @@ const Sensor = ({getSensibility,setSensibility,getSensors,getAlarm,setAlarm,send
             sensorid
         }
         setSensibility(sensibilityData);
+        sendMessageToServer(sensorid,gatewayid,"setSensibility",sensibilityValue);
     }
 
     const dropDownDefaultSensibilityHandler = (sensorId)=>{

@@ -32,12 +32,13 @@ export const socketConnection = (gatewayid)=>dispatch=>{
     })
 }
 
-export const sendMessageToServer = (sensorid,gatewayid,command)=>dispatch=>{
-    console.log(`call ${sensorid}`);
+export const sendMessageToServer = (sensorid,gatewayid,command,data)=>dispatch=>{
+    
     socket.emit("server",{'content':{
         "sensorid":sensorid,
         "gatewayid":gatewayid,
-        "cmd":command
+        "cmd":command,
+        "data":data
         }
     });
     dispatch(setAlert('message send to server','success'));
