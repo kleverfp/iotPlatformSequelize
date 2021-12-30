@@ -4,20 +4,21 @@ import { connect } from 'react-redux';
 import {useParams,useNavigate } from 'react-router-dom';
 import { getSensors,deleteSensor } from '../../actions/sensor';
 import { getAlarm, setAlarm } from '../../actions/sensorAlarm';
+import {getSensibility,setSensibility} from '../../actions/sensorSensibility';
+
 import { socketConnection,sendMessageToServer } from '../../actions/socket';
 import Spinner from '../layout/Spinner';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
-const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},sensorAlarm:{alarm}}) => {
+const Sensor = ({getSensibility,setSensibility,getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnection,deleteSensor,sensor:{sensor},sensorAlarm:{alarm},sensorSensibility:{sensibility}}) => {
     const navigate = useNavigate();
-
-     
     const {gatewayid} = useParams();
     const [show,setShow] = useState([]);
     const [showAlarm,setShowAlarm] = useState(false);
     const [elapsed,setElapsed]= useState([]);
     const [alarmTime,setAlarmTime] = useState(null);
+    const [sensorSensibilityState,setSensorSensibilityState] = useState([]);
     const [formData,setFormData]  = useState({
         period:'',
         gatewayid
@@ -30,14 +31,13 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         getSensors(gatewayid);
         socketConnection(gatewayid);
         getAlarm(gatewayid);
-       
-        
+        getSensibility(gatewayid);
         
     },[]);
 
     useEffect(()=>{
         alarm && setAlarmTime(alarm.period);
-    },[alarm])
+    },[alarm]);
 
     useEffect(()=>{
         const interval=  setInterval(()=>{
@@ -47,10 +47,13 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
         
          },1000);
          return ()=>clearInterval(interval);
-    },[sensor,alarm])
+    },[sensor,alarm]);
 
+    useEffect(()=>{
+        sensibility && setSensorSensibilityState(sensibility);
+        console.log(sensibility);
+    },[sensibility])
 
-   
     const updateElapsedTime =()=>{
           
             let hour=0;
@@ -150,8 +153,23 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
             return 'unknown'
     }
    
-    const sensibilityHandler = (e)=>{
-        console.log(e.value)
+    const sensibilityHandler = (sensibilityValue,sensorid)=>{
+        const sensibilityData ={
+            data:sensibilityValue,
+            gatewayid,
+            sensorid
+        }
+        setSensibility(sensibilityData);
+    }
+
+    const dropDownDefaultSensibilityHandler = (sensorId)=>{
+            if(sensorSensibilityState !== null && sensorSensibilityState.length > 1){
+                const arraySensorSensibilityIndex = sensorSensibilityState.findIndex((sensibility)=>sensibility.sensorid ==sensorId);
+                if(arraySensorSensibilityIndex > -1)
+                    return sensorSensibilityState[arraySensorSensibilityIndex].data === null ? "3":sensorSensibilityState[arraySensorSensibilityIndex].data;
+            
+            }
+        
     }
 
    
@@ -194,7 +212,7 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
                                         <td></td>
                                         <td><label>sensibility:</label></td>
                                         <td>
-                                        <Dropdown options={options} onChange={sensibilityHandler} value={defaultOption}/>
+                                        <Dropdown options={options} onChange={(e)=> sensibilityHandler(e.value,snr.sensorid)} value={dropDownDefaultSensibilityHandler(snr.sensorid)}/>
                                         </td>
                                         <td><button onClick={ () =>resetSensorHandler(snr.sensorid)} className="btn btn-success">reset sensor</button></td>
                                     </tr>
@@ -230,19 +248,23 @@ const Sensor = ({getSensors,getAlarm,setAlarm,sendMessageToServer,socketConnecti
 Sensor.propTypes = {
     sensor:PropTypes.object.isRequired,
     sensorAlarm:PropTypes.object.isRequired,
+    sensorSensibility:PropTypes.object.isRequired,
     getSensors:PropTypes.func.isRequired,
     socketConnection:PropTypes.func.isRequired,
     deleteSensor:PropTypes.func.isRequired,
     sendMessageToServer:PropTypes.func.isRequired,
     getAlarm:PropTypes.func.isRequired,
-    setAlarm:PropTypes.func.isRequired
+    setAlarm:PropTypes.func.isRequired,
+    getSensibility:PropTypes.func.isRequired,
+    setSensibility:PropTypes.func.isRequired,
 
 }
 
 const mapStateToProps = state =>({
     sensor:state.sensor,
-    sensorAlarm:state.sensorAlarm
+    sensorAlarm:state.sensorAlarm,
+    sensorSensibility:state.sensorSensibility
 })
 
 
-export default connect(mapStateToProps,{getSensors,setAlarm,getAlarm,deleteSensor,socketConnection,sendMessageToServer}) (Sensor)
+export default connect(mapStateToProps,{setSensibility,getSensibility,getSensors,setAlarm,getAlarm,deleteSensor,socketConnection,sendMessageToServer}) (Sensor)

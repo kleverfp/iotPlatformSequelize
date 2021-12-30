@@ -18,6 +18,9 @@ export const UPDATE_GATEWAY ='UPDATE_GATEWAY';
 export const SET_ALARM ='SET_ALARM'; 
 export const GET_ALARM ='GET_ALARM'; 
 export const ALARM_ERROR ='ALARM_ERROR'; 
+export const SET_SENSIBILITY='SET_SENSIBILITY';
+export const GET_SENSIBILITY='GET_SENSIBILITY';
+export const SENSIBILITY_ERROR ='SENSIBILITY_ERROR'; 
 
 
 

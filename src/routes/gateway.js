@@ -45,6 +45,7 @@ router.get('/user/all',auth, async(req,res)=>{
     }
 
 });
+
 router.post('/new',auth,[
     body('name','gateway name is required').trim().not().isEmpty(),
     body('gatewayid','gatewayid is required').trim().not().isEmpty()
