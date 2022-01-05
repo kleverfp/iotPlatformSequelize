@@ -14,7 +14,7 @@ const GetSensorData = require('../src/controllers/SensorData');
 const socketGatewayId =[];
 const socketUserId =[];
 let socketActuatorId='';
-
+let lastTime = new Date().getTime();
 
 io.use(async(socket, next) => {
   const gatewayid = socket.handshake.auth.gatewayid;
@@ -94,7 +94,12 @@ io.on('connect', function(socket){
     });
 
     socket.on("server", ({content})=>{
-     
+      const time = new Date().getTime();
+      if(time-lastTime < 1000)
+        return 
+      
+      lastTime =time;
+      console.log("reset");
       const index = socketGatewayId.findIndex((obj)=>obj.gatewayid==content.gatewayid);
       if(index > -1)
         socket.to(socketGatewayId[index].socket).emit("RecieveFromServer",content);

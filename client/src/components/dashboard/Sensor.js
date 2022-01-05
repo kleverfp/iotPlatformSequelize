@@ -112,6 +112,7 @@ const Sensor = ({getSensibility,setSensibility,getSensors,getAlarm,setAlarm,send
     }
         
     const resetSensorHandler = (id)=>{
+        
         sendMessageToServer(id,gatewayid,"reset","");
     }
 
