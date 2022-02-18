@@ -43,9 +43,9 @@ io.use(async(socket, next) => {
       next();
     }
     else{
-
+      console.log("auth");
       auth(socket.handshake.auth.token,socket,next);
-     
+      console.log("auth ok");
       if(socket.user){
         const index = socketUserId.findIndex((obj)=>obj.user==socket.user);
 	console.log("user");       

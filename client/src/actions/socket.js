@@ -11,6 +11,16 @@ let socket=[];
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
+    /*socket = io("https://qonteciot.com/socket",{
+        auth:{
+            token:localStorage.token
+        },
+        query:{
+            "gateway":gatewayid
+        },
+	    transports: ['websocket'], wsEngine: 'uws'
+    });*/
+
     socket = io("https://qonteciot.com/socket",{
         auth:{
             token:localStorage.token
@@ -20,6 +30,7 @@ export const socketConnection = (gatewayid)=>dispatch=>{
         },
 	    transports: ['websocket'], wsEngine: 'uws'
     });
+
    
     socket.on('connect',()=>{
         console.log("connect")
