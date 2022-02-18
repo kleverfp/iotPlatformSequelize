@@ -12,7 +12,7 @@ let socket=[];
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
-    socket = io("http://127.0.0.1:5005",{
+    socket = io("https://qonteciot.com/socket.io/",{
         auth:{
             token:localStorage.token
         },
