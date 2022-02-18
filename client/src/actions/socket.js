@@ -12,7 +12,7 @@ let socket=[];
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
-    socket = io("https://qonteciot.com/socket.io/",{
+    socket = io("wss://qonteciot.com/socket.io/",{
         
         auth:{
             token:localStorage.token
