@@ -1,5 +1,6 @@
 import { setAlert } from "./alert";
-import io from 'socket.io-client/dist/socket.io';
+import io from 'socket.io-client'
+//import io from 'socket.io-client/dist/socket.io';
 
 import {
     GET_SENSOR
@@ -11,16 +12,6 @@ let socket=[];
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
-    /*socket = io("https://qonteciot.com/socket",{
-        auth:{
-            token:localStorage.token
-        },
-        query:{
-            "gateway":gatewayid
-        },
-	    transports: ['websocket'], wsEngine: 'uws'
-    });*/
-
     socket = io("https://qonteciot.com/socket",{
         auth:{
             token:localStorage.token
@@ -30,6 +21,8 @@ export const socketConnection = (gatewayid)=>dispatch=>{
         },
 	    transports: ['websocket'], wsEngine: 'uws'
     });
+
+   
 
    
     socket.on('connect',()=>{
