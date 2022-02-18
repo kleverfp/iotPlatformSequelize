@@ -55,7 +55,7 @@ io.use(async(socket, next) => {
           socketUserId[index].gatewayid = socket.handshake.query.gateway;
         }
         else{
-	  console.log("not index");
+	        console.log("not index");
           socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
 	}
         
