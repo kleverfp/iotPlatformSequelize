@@ -11,13 +11,14 @@ let socket=[];
 export const socketConnection = (gatewayid)=>dispatch=>{
 
 
-    socket = io("http://localhost:5005",{
+    socket = io("https://qonteciot.com/socket",{
         auth:{
             token:localStorage.token
         },
         query:{
             "gateway":gatewayid
-        }
+        },
+	transports: ['websocket'], wsEngine: 'uws'
     });
    
     socket.on('connect',()=>{

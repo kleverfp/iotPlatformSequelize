@@ -1,7 +1,7 @@
 module.exports={
     dialect:'mysql',
     host:'localhost',
-    username:'ferreira',
+    username:'qontec',
     password:'Kfp_2008',
     database:'iotplatformdb',
     define:{

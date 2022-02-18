@@ -48,16 +48,13 @@ io.use(async(socket, next) => {
      
       if(socket.user){
         const index = socketUserId.findIndex((obj)=>obj.user==socket.user);
-	console.log("user");       
+       
         if(index > -1){
-	 console.log("index") 
+	 console.log("indx"); 
           socketUserId[index].socket = socket.id;
           socketUserId[index].gatewayid = socket.handshake.query.gateway;
         }
-        else{
-	  console.log("not index");
-          socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
-	}
+        else{          socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
         
         next();
         
