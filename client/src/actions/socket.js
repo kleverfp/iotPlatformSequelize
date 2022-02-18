@@ -13,15 +13,16 @@ export const socketConnection = (gatewayid)=>dispatch=>{
 
 
     socket = io("https://qonteciot.com/socket.io/",{
+        
         auth:{
             token:localStorage.token
         },
         query:{
             "gateway":gatewayid
         },
-        withCredentials: true,
+        withCredentials:false,sslVerify:false,
 	    transports: ['websocket'], 
-        wsEngine: 'uws'
+        wsEngine: 'uws',
     });
 
    
