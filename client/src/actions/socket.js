@@ -19,7 +19,9 @@ export const socketConnection = (gatewayid)=>dispatch=>{
         query:{
             "gateway":gatewayid
         },
-	    transports: ['websocket'], wsEngine: 'uws'
+        withCredentials: true,
+	    transports: ['websocket'], 
+        wsEngine: 'uws'
     });
 
    

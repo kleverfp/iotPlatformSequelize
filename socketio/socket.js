@@ -55,7 +55,7 @@ io.use(async(socket, next) => {
           socketUserId[index].gatewayid = socket.handshake.query.gateway;
         }
         else{
-	        console.log("not index");
+	      console.log("not index");
           socketUserId.push({"user":socket.user,"socket":socket.id,"gatewayid":socket.handshake.query.gateway});
 	}
         
@@ -82,6 +82,7 @@ io.on('connect', function(socket){
             const indexUser = socketUserId.findIndex((usr)=> usr.gatewayid == socketGatewayId[indexGateway].gatewayid);
             
             if(indexUser > -1){
+              
               const data =  await GetSensorData(socketGatewayId[indexGateway].gatewayid);
               socket.to(socketUserId[indexUser].socket).emit("client",data);
               
