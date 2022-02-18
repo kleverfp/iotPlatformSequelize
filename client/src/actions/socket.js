@@ -18,10 +18,11 @@ export const socketConnection = (gatewayid)=>dispatch=>{
         query:{
             "gateway":gatewayid
         },
-	transports: ['websocket'], wsEngine: 'uws'
+	    transports: ['websocket'], wsEngine: 'uws'
     });
    
     socket.on('connect',()=>{
+        console.log("connect")
         console.log(socket.id);
     });
 
